@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <external-path
+        name="my_images"
+        path="Pictures" />
+
+    <external-cache-path
+        name="external-cache"
+        path="." />
+
+    <external-cache-path
+        name="down_lod"
+        path="update" />
+
+    <cache-path
+        name="cache"
+        path="update" />
+</paths>

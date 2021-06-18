@@ -1,2 +1,4 @@
+include ':adLibs'
+include ':baseLib'
 include ':app'
 rootProject.name = "WifiMaster"

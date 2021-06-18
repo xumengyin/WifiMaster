@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="text_title_color1">#2E3133</color>
+    <color name="text_content_color1">#7D8388</color>
+    <color name="text_content_color2">#0082FF</color>
+    <color name="line">#dfdfdf</color>
+
+
+
+
+    <color name="white">#ffffff</color>
+    <color name="ui_drawable_color_list_pressed">#DEE0E2</color>
+    <color name="ui_drawable_color_list_separator">#DEE0E2</color>
+    <color name="ui_drawable_color_list_separator_grey">#f5f5f5</color>
+
+    <color name="ui_config_color_main">#0082FF</color>
+</resources>
