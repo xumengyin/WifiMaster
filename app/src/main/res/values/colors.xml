@@ -13,4 +13,9 @@
     <color name="ui_config_color_main">#0082FF</color>
 
 
+    <color name="tab_color_main1">#1F80FF</color>
+    <color name="tab_color_main2">#858C94</color>
+    <color name="bg_color">#fff6f7fc</color>
+
+
 </resources>

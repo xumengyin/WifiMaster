@@ -3,15 +3,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <FrameLayout
-        android:id="@+id/frame"
+<!--    <FrameLayout-->
+<!--        android:id="@+id/frame"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
+
+
+<!--    </FrameLayout>-->
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/vPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
 
-    </FrameLayout>
+    <com.qmuiteam.qmui.widget.tab.QMUITabSegment
+        android:id="@+id/vTab"
+        android:background="@drawable/base_bottom_tab_bg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_56"/>
 
 </LinearLayout>
