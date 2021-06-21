@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="center_vertical"
+    android:paddingLeft="@dimen/dp_16"
+    android:paddingRight="@dimen/dp_16"
+    android:layout_height="@dimen/dp_55">
+
+    <ImageView
+        android:id="@+id/wifiIcon"
+        tools:src="@drawable/wifi_b1"
+        android:layout_width="@dimen/dp_24"
+        android:layout_height="@dimen/dp_24"/>
+
+    <TextView
+        android:id="@+id/vWifiName"
+        android:layout_width="0dp"
+        android:textSize="@dimen/sp_14"
+        tools:text="HUAWEI"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"/>
+    <ImageView
+        android:id="@+id/wifiStatus"
+        tools:src="@drawable/top_wifi_password"
+        android:layout_width="@dimen/dp_20"
+        android:layout_height="@dimen/dp_20"/>
+</LinearLayout>

@@ -8,6 +8,21 @@ import com.jerry.wifimaster.bean.Menus
 class MenuAdapter( data: MutableList<Menus>?) :
     BaseQuickAdapter<Menus, BaseViewHolder>(R.layout.menu_item, data) {
     override fun convert(holder: BaseViewHolder, item: Menus) {
+        item.apply {
+            holder.setImageResource(R.id.imgId,drawableId)
+            holder.setText(R.id.desc,desc)
+            holder.setText(R.id.menuValue,descValue)
+            if(type==TYPE_NET_SPEED_N)
+            {
+                holder.setVisible(R.id.check,true)
+                holder.setGone(R.id.menuValue,true)
+            }else
+            {
+                holder.setGone(R.id.check,true)
+                holder.setVisible(R.id.menuValue,true)
+            }
+
+        }
 
     }
 

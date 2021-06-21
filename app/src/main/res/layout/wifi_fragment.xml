@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="#fff6f7fc"
-    android:layout_height="match_parent">
-
+    android:orientation="vertical">
 
 
     <LinearLayout
+        android:id="@+id/vTopLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:background="@drawable/main_top_bg">
+        android:background="@drawable/main_top_bg"
+        android:gravity="center_horizontal">
 
-            <TextView
-                android:id="@+id/vWifiName"
-                android:textColor="@color/text_title_color1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/sp_23"
-                android:layout_marginTop="@dimen/dp_20"
-                android:layout_marginBottom="@dimen/dp_60"
-                android:drawableLeft="@drawable/wifi_b1"
-                android:drawablePadding="@dimen/dp_2"
-                tools:text="wifi1"/>
+        <TextView
+            android:id="@+id/vWifiName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_20"
+            android:layout_marginBottom="@dimen/dp_60"
+            android:drawableLeft="@drawable/wifi_b1"
+            android:drawablePadding="@dimen/dp_2"
+            android:textColor="@color/text_title_color1"
+            android:textSize="@dimen/sp_23"
+            tools:text="wifi1" />
 
 
     </LinearLayout>
@@ -33,8 +33,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-50dp"
         android:layout_marginLeft="@dimen/dp_16"
+        android:layout_marginTop="-50dp"
         android:layout_marginRight="@dimen/dp_16"
         android:background="@drawable/white_radius"
         android:gravity="center_horizontal"
@@ -43,15 +43,29 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/vMenuRv"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
 
         <ImageView
             android:id="@+id/vPanel"
-            android:padding="@dimen/dp_15"
-            android:src="@drawable/panel_handle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_15"
+            android:src="@drawable/panel_handle" />
 
     </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_200"
+        android:layout_marginLeft="@dimen/dp_16"
+        android:layout_marginRight="@dimen/dp_16"></LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/vWifiRv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_radius" />
+
 </LinearLayout>

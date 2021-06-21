@@ -1,4 +1,6 @@
 package com.jerry.wifimaster.ui;
 
-public class BaseAdFragment extends BaseFragment {
+import com.jerry.baselib.base.BaseFragment;
+
+public abstract class BaseAdFragment extends BaseFragment {
 }

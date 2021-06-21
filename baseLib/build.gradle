@@ -44,4 +44,5 @@ dependencies {
     api 'androidx.lifecycle:lifecycle-runtime:2.2.0'
     api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
     api project(path: ':adLibs')
+    api 'com.github.GrenderG:Toasty:1.5.0'
 }

@@ -7,6 +7,7 @@ import com.jerry.baselib.base.BaseActivity
 import com.jerry.wifimaster.adapter.FragmentTabAdapter
 import com.jerry.wifimaster.ui.SettingFragment
 import com.jerry.wifimaster.ui.WifiFragment
+import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import com.qmuiteam.qmui.widget.tab.QMUIBasicTabSegment
 import com.qmuiteam.qmui.widget.tab.QMUITabSegment
@@ -19,7 +20,7 @@ open class MainActivity : BaseActivity() {
     val settingFragment by lazy {
         SettingFragment()
     }
-    lateinit var tabAdapter:FragmentTabAdapter
+    lateinit var tabAdapter: FragmentTabAdapter
     override fun loadData(savedInstanceState: Bundle?) {
 
     }
@@ -36,30 +37,34 @@ open class MainActivity : BaseActivity() {
         initTabs()
     }
 
-
-    private fun initTabs()
-    {
-
-        val colorMain1=ContextCompat.getColor(this,R.color.tab_color_main1)
-        val colorMain2=ContextCompat.getColor(this,R.color.tab_color_main2)
-        val builder=vTab.tabBuilder()
+    private fun initTabs() {
+        vTab.reset()
+        val colorMain1 = ContextCompat.getColor(this, R.color.tab_color_main1)
+        val colorMain2 = ContextCompat.getColor(this, R.color.tab_color_main2)
+        val textSize=QMUIDisplayHelper.dp2px(this,12)
+        val iconSize=QMUIDisplayHelper.dp2px(this,24)
+        val builder = vTab.tabBuilder()
         builder.apply {
-                setGravity(Gravity.CENTER).setColor(colorMain2, colorMain1).skinChangeWithTintColor(false);
+            setGravity(Gravity.CENTER).setColor(colorMain2, colorMain1).skinChangeWithTintColor(false)
         }
-       val tab1= builder.setNormalDrawable(ContextCompat.getDrawable(this,R.drawable.tab_wifi1))
-            .setSelectedDrawable(ContextCompat.getDrawable(this,R.drawable.tab_wifi2))
+        val tab1 = builder.setNormalDrawable(ContextCompat.getDrawable(this, R.drawable.tab_wifi1))
+            .setSelectedDrawable(ContextCompat.getDrawable(this, R.drawable.tab_wifi2))
             .setText("WIFI")
+            .setTextSize(textSize,textSize)
+            .setNormalIconSizeInfo(iconSize,iconSize)
             .build(this)
-        val tab2= builder.setNormalDrawable(ContextCompat.getDrawable(this,R.drawable.tab_setting1))
-            .setSelectedDrawable(ContextCompat.getDrawable(this,R.drawable.tab_setting2))
-            .setText("设置")
-            .build(this)
+        val tab2 =
+            builder.setNormalDrawable(ContextCompat.getDrawable(this, R.drawable.tab_setting1))
+                .setSelectedDrawable(ContextCompat.getDrawable(this, R.drawable.tab_setting2))
+                .setText("设置")
+                .setTextSize(textSize,textSize)
+                .setNormalIconSizeInfo(iconSize,iconSize)
+                .build(this)
 
-        vTab.apply {
-            mode=QMUITabSegment.MODE_FIXED
-            addTab(tab1)
-            addTab(tab2)
-            addOnTabSelectedListener(object :QMUIBasicTabSegment.OnTabSelectedListener{
+        vTab.addTab(tab1).addTab(tab2)
+        vTab.notifyDataChanged()
+        vTab.mode = QMUITabSegment.MODE_FIXED
+        vTab.addOnTabSelectedListener(object : QMUIBasicTabSegment.OnTabSelectedListener {
                 override fun onDoubleTap(index: Int) {
 
                 }
@@ -77,15 +82,12 @@ open class MainActivity : BaseActivity() {
                 }
 
             })
-        }
 
-        val wifiFragment=WifiFragment()
-        val settingFragment=SettingFragment()
 
-        val list=listOf(wifiFragment,settingFragment)
-        tabAdapter=FragmentTabAdapter(supportFragmentManager,list)
-        vPager.adapter=tabAdapter
-        vTab.setupWithViewPager(vPager)
+        val list = listOf(wifiFragment, settingFragment)
+        tabAdapter = FragmentTabAdapter(supportFragmentManager, list)
+        vPager.adapter = tabAdapter
+        vTab.setupWithViewPager(vPager,false)
 
     }
 }

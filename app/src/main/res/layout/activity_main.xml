@@ -26,6 +26,7 @@
         android:id="@+id/vTab"
         android:background="@drawable/base_bottom_tab_bg"
         android:layout_width="match_parent"
+        app:qmui_tab_icon_position="top"
         android:layout_height="@dimen/dp_56"/>
 
 </LinearLayout>
