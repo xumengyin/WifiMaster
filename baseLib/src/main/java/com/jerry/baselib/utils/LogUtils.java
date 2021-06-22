@@ -42,19 +42,19 @@ public class LogUtils {
 
     public static void logi(String message, Object... args) {
         if (DEBUG) {
-            Log.i("LogUtils", message);
+            Log.i("xuxu", message);
         }
     }
 
     public static void logd(String message, Object... args) {
         if (DEBUG) {
-            Log.d("LogUtils", message);
+            Log.d("xuxu", message);
         }
     }
 
     public static void loge(String message, Object... args) {
         if (DEBUG) {
-            Log.e("LogUtils", message);
+            Log.e("xuxu", message);
         }
     }
 
