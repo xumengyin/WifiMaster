@@ -8,7 +8,7 @@ import com.jerry.wifimaster.bean.WifiBean
 class WifisAdapter(data: MutableList<WifiBean>?) :
     BaseQuickAdapter<WifiBean, BaseViewHolder>(R.layout.wifi_item_layout, data) {
 
-    lateinit var wifiName: String
+    var wifiName: String = ""
 
     fun setCurWifi(wifiName: String) {
         this.wifiName = wifiName
@@ -21,6 +21,18 @@ class WifisAdapter(data: MutableList<WifiBean>?) :
                 holder.setImageResource(R.id.wifiStatus, R.drawable.top_wifi_connect)
             } else {
                 holder.setImageResource(R.id.wifiStatus, R.drawable.top_wifi_password)
+            }
+
+            when (levelStrength) {
+                WifiBean.LEVEL_LOW -> {
+                    holder.setImageResource(R.id.wifiIcon, R.drawable.wifi_b3)
+                }
+                WifiBean.LEVEL_MIDDLE -> {
+                    holder.setImageResource(R.id.wifiIcon, R.drawable.wifi_b2)
+                }
+                WifiBean.LEVEL_HIGTH -> {
+                    holder.setImageResource(R.id.wifiIcon, R.drawable.wifi_b1)
+                }
             }
         }
 

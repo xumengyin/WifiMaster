@@ -1,41 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:gravity="center_horizontal"
-    android:paddingBottom="@dimen/dp_10"
-    android:layout_height="wrap_content">
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/dp_10">
 
 
     <ImageView
         android:id="@+id/imgId"
         android:layout_width="@dimen/dp_36"
-        tools:src="@drawable/top_menu1"
-        android:layout_height="@dimen/dp_36"/>
+        android:layout_height="@dimen/dp_36"
+        tools:src="@drawable/top_menu1" />
+
     <TextView
         android:id="@+id/desc"
-        android:textColor="@color/text_title_color1"
-        android:textSize="@dimen/sp_13"
-        android:layout_width="wrap_content"
-        tools:text="网络测速"
-        android:layout_height="wrap_content"/>
-    <TextView
-        android:id="@+id/menuValue"
-        tools:text="较强"
-        android:textColor="@color/text_content_color1"
-        android:textSize="@dimen/sp_12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <TextView
-        android:id="@+id/check"
-        android:visibility="gone"
-        tools:text="检测"
-        android:paddingLeft="@dimen/dp_8"
-        android:paddingRight="@dimen/dp_8"
-        android:textColor="@color/white"
-        android:textSize="@dimen/sp_12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/radius_green"/>
+        android:textColor="@color/text_title_color1"
+        android:textSize="@dimen/sp_13"
+        tools:text="网络测速" />
+
+    <TextView
+        android:id="@+id/menuValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_content_color1"
+        android:textSize="@dimen/sp_12"
+        tools:text="较强" />
+
+    <TextView
+        android:id="@+id/check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/radius_green"
+        android:paddingLeft="@dimen/dp_8"
+        android:paddingRight="@dimen/dp_8"
+        android:text="检测"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_12"
+        android:visibility="gone" />
 </LinearLayout>

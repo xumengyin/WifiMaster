@@ -15,11 +15,19 @@ public class ConnectReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
             LogUtils.logd("ConnectReceiver----"+intent.getExtras().toString());
+            if(callBack!=null)
+            {
+                callBack.onConnect();
+            }
         }
     }
 
     public ConnectReceiver(Context context) {
         this.context = context;
+    }
+
+    public void setCallBack(IConnectRec callBack) {
+        this.callBack = callBack;
     }
 
     public void register() {

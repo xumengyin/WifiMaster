@@ -17,7 +17,7 @@ public class NetSpeedHelper {
     private String Speed = "0KB/s";
     private long totalByte = 0;
     INetSpeed callBack;
-    public static final int GAP = 1;//1S 查一次
+    public static final int GAP = 4;//1S 查一次
     DecimalFormat df = new DecimalFormat("#.#");
     private boolean isStart=false;
     public NetSpeedHelper(INetSpeed callBack) {

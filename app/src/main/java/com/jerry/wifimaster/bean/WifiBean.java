@@ -14,6 +14,13 @@ public class WifiBean {
 
     public WifiBean(ScanResult result) {
         this.result = result;
+        if (result.level >= -60) {
+            levelStrength = LEVEL_HIGTH;
+        } else if (result.level <= -100) {
+            levelStrength = LEVEL_LOW;
+        } else {
+            levelStrength = LEVEL_MIDDLE;
+        }
     }
 
     @Override

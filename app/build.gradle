@@ -50,5 +50,7 @@ dependencies {
     implementation 'com.thanosfisherman.wifiutils:wifiutils:1.6.5'
     implementation 'com.github.tbruyelle:rxpermissions:0.12'
     implementation "io.reactivex.rxjava3:rxjava:3.0.12"
+//    implementation 'com.dinuscxj:recycleritemdecoration:1.0.0'
+
 
 }

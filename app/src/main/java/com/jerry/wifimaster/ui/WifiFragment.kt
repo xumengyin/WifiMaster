@@ -3,7 +3,9 @@ package com.jerry.wifimaster.ui
 import android.graphics.drawable.Drawable
 import android.net.wifi.WifiInfo
 import android.os.Bundle
+import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jerry.baselib.utils.LogUtils
@@ -36,6 +38,10 @@ class WifiFragment : BaseAdFragment() {
 
     })
 
+    val connectReceiverCallBack= ConnectReceiver.IConnectRec {
+        initMenuData()
+        scanWifi()
+    }
     override fun onStop() {
         super.onStop()
         netSpeedHelper.stop()
@@ -54,7 +60,9 @@ class WifiFragment : BaseAdFragment() {
         val statusHeight = QMUIDisplayHelper.getStatusBarHeight(context)
         vTopLayout.setPadding(0, statusHeight, 0, 0)
         connectReceiver.register()
-        menuAdapter = MenuAdapter(Menus.menus)
+        connectReceiver.setCallBack(connectReceiverCallBack)
+        //initMenuData()
+        menuAdapter = MenuAdapter(null)
         vMenuRv.apply {
             layoutManager = GridLayoutManager(this@WifiFragment.context, 4)
             adapter = menuAdapter
@@ -63,9 +71,53 @@ class WifiFragment : BaseAdFragment() {
             wifisAdapter = WifisAdapter(mutableListOf())
             layoutManager = LinearLayoutManager(this@WifiFragment.context)
             adapter = wifisAdapter
+            val divider=DividerItemDecoration(this@WifiFragment.context,LinearLayoutManager.VERTICAL)
+            ContextCompat.getDrawable(context,R.drawable.base_divider)?.let { divider.setDrawable(it) }
+            addItemDecoration(divider)
+        }
+        //收起面板
+        vPanel.setOnClickListener {
+            if(menuAdapter.showPanel)
+            {
+                menuAdapter.setList(Menus.getHideMenu())
+                ratatePanel(true)
+            }else
+            {
+                //initMenuData()
+                menuAdapter.setList(Menus.menus)
+                ratatePanel(false)
+            }
+            menuAdapter.showPanel= !menuAdapter.showPanel
+        }
+        //菜单点击事件
+        menuAdapter.setOnItemClickListener { adapter, view, position ->
+
+
+        }
+        wifisAdapter.setOnItemClickListener { adapter, view, position ->
+           val item= wifisAdapter.data[position]
+            item.apply {
+                    if(wifisAdapter.wifiName==result.SSID)
+                    {
+
+                    }else
+                    {
+
+                    }
+            }
+
         }
     }
 
+    private fun ratatePanel(hide:Boolean)
+    {
+//        vPanel.pivotX=0.5f
+//        vPanel.pivotY=0.5f
+        if(hide)
+            vPanel.setImageResource(R.drawable.panel_handle2)
+        else
+            vPanel.setImageResource(R.drawable.panel_handle)
+    }
     override fun loadData(savedInstanceState: Bundle?) {
         super.loadData(savedInstanceState)
         scanWifi()
@@ -80,41 +132,60 @@ class WifiFragment : BaseAdFragment() {
                 val netWork = NetworkUtil.getWifiInfo(this)
                 if (netWork != null) {
                     LogUtils.logd(netWork.toString())
-                    text = netWork.ssid
+                    if (menuAdapter.data.isEmpty()) {
+                        if(menuAdapter.showPanel)
+                        {
+                            menuAdapter.setList(Menus.menus)
+                        }else
+                        {
+                            menuAdapter.setList(Menus.getHideMenu())
+                        }
+                    }
+                    text = netWork.ssid.replace("\"","")
+                    //设置当前ssid
+                    wifisAdapter.setCurWifi(text)
                     val strength = CommonUtils.getWifiStrength(netWork.rssi)
-                    if (netWork.rssi < -100)
+                    if (netWork.rssi <= -100)
                         d = ContextCompat.getDrawable(this, R.drawable.wifi_b3)
-                    else if (netWork.rssi > -50)
+                    else if (netWork.rssi >= -60)
                         d = ContextCompat.getDrawable(this, R.drawable.wifi_b1)
                     else
                         d = ContextCompat.getDrawable(this, R.drawable.wifi_b2)
                     val connectSpeed =
                         if (netWork.linkSpeed == WifiInfo.LINK_SPEED_UNKNOWN) "未知" else "" + netWork.linkSpeed + WifiInfo.LINK_SPEED_UNITS
                     val ip = NetworkUtil.getLocalIp()
-                    menuAdapter.data.forEachIndexed { index, menus ->
+                    Menus.menus.forEachIndexed { index, menus ->
                         if (menus.type == MenuAdapter.TYPE_SIGNAL_STREHGTH) {
                             menus.descValue = strength
-                            menuAdapter.notifyItemChanged(index)
+                            if(index<menuAdapter.data.size)
+                                menuAdapter.notifyItemChanged(index)
                         } else if (menus.type == MenuAdapter.TYPE_CONNECT_SPEED) {
                             menus.descValue = connectSpeed
-                            menuAdapter.notifyItemChanged(index)
+                            if(index<menuAdapter.data.size)
+                                menuAdapter.notifyItemChanged(index)
                         } else if (menus.type == MenuAdapter.TYPE_IP) {
                             menus.descValue = ip
-                            menuAdapter.notifyItemChanged(index)
+                            if(index<menuAdapter.data.size)
+                                menuAdapter.notifyItemChanged(index)
                         }
                     }
-
+                    vPanel.visibility=View.VISIBLE
                 } else {
                     d = ContextCompat.getDrawable(this, R.drawable.wifi_b4)
                     text = "未连接WIFI"
+                    menuAdapter.setList(Menus.unConnectMenu)
+                    vPanel.visibility=View.GONE
                 }
+
             } else {
                 d = ContextCompat.getDrawable(this, R.drawable.wifi_b4)
                 text = "未连接WIFI"
+                menuAdapter.setList(Menus.unConnectMenu)
+                vPanel.visibility=View.GONE
             }
             vWifiName.setText(text)
+            d?.setBounds(0,0,d.minimumWidth,d.minimumHeight)
             vWifiName.setCompoundDrawables(d, null, null, null)
-
 
         }
 
@@ -125,7 +196,7 @@ class WifiFragment : BaseAdFragment() {
             if (NetworkUtil.getWifiEnabled(this)) {
                 var curSSid = ""
                 val wifiInfo = NetworkUtil.getWifiInfo(this)
-                curSSid = if (wifiInfo == null) "" else wifiInfo.ssid
+                curSSid = if (wifiInfo == null) "" else wifiInfo.ssid.replace("\"","")
                 val dataList = mutableListOf<WifiBean>()
                 WifiUtils.withContext(this).scanWifi { it ->
                     it.forEach {
