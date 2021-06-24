@@ -4,8 +4,10 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.DhcpInfo;
 import android.net.NetworkInfo;
+import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 
@@ -39,6 +41,21 @@ public class NetworkUtil {
     private static final String tag = NetworkUtil.class.getSimpleName();
 
 
+    public static boolean isWifiNeedPass(ScanResult result) {
+        boolean needPass = true;
+        if (result.capabilities != null) {
+            String c = result.capabilities.trim();
+            if (TextUtils.isEmpty(c) || c.equals("[ESS]")) {
+                needPass = false;
+            } else {
+                needPass = true;
+            }
+        } else {
+            needPass = false;
+        }
+        return needPass;
+    }
+
     public static boolean isWifiConnected(Context context) {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) context.getSystemService(
@@ -58,8 +75,7 @@ public class NetworkUtil {
         if (wifiManager != null) {
             WifiInfo wifiInfo = wifiManager.getConnectionInfo();
             return wifiInfo;
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -77,8 +93,7 @@ public class NetworkUtil {
         if (wifiManager != null) {
             DhcpInfo dhcpInfo = wifiManager.getDhcpInfo();
             return dhcpInfo;
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -88,8 +103,7 @@ public class NetworkUtil {
         WifiInfo wifiInfo = getWifiInfo(context);
         if (wifiInfo != null) {
             return wifiInfo.getSSID();
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -187,8 +201,7 @@ public class NetworkUtil {
             ipStr += String.valueOf(0xFF & IP >> 16);
             ipStr += ".";
             ipStr += String.valueOf(0xFF & IP >> 24);
-        }
-        else {
+        } else {
 
             ipStr += String.valueOf(0xFF & IP >> 24);
             ipStr += ".";
@@ -284,7 +297,7 @@ public class NetworkUtil {
         Log.d(tag, "ping ip = " + ip);
         try {
             Process p = Runtime.getRuntime()
-                               .exec("/system/bin/ping -c 10 -w 4 " + ip);
+                    .exec("/system/bin/ping -c 10 -w 4 " + ip);
             if (p == null) {
                 return false;
             }
@@ -310,8 +323,8 @@ public class NetworkUtil {
         String result = "";
         try {
             Process p = Runtime.getRuntime()
-                               .exec("/system/bin/ping -c " + count + " -w 4 " +
-                                       ip);
+                    .exec("/system/bin/ping -c " + count + " -w 4 " +
+                            ip);
             if (p == null) {
                 return result;
             }
@@ -349,8 +362,8 @@ public class NetworkUtil {
      * see link{https://support.apple.com/zh-cn/HT202944}
      */
     public static boolean isAnyPortOk(String ip) {
-        int portArray[] = { 22, 80, 135, 137, 139, 445, 3389, 4253, 1034, 1900,
-                993, 5353, 5351, 62078 };
+        int portArray[] = {22, 80, 135, 137, 139, 445, 3389, 4253, 1034, 1900,
+                993, 5353, 5351, 62078};
         Selector selector;
         for (int i = 0; i < portArray.length; i++) {
             try {
@@ -368,8 +381,7 @@ public class NetworkUtil {
                             " tcp is ok");
                     selector.close();
                     return true;
-                }
-                else {
+                } else {
                     selector.close();
                     //Socket socket = new Socket();
                     //SocketAddress socketAddress = new InetSocketAddress(ip,
@@ -389,6 +401,7 @@ public class NetworkUtil {
 
     /**
      * wifi ok?
+     *
      * @param context
      * @return
      */

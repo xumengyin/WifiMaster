@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable
 import android.net.wifi.WifiInfo
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
@@ -11,16 +12,26 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.jerry.baselib.utils.LogUtils
 import com.jerry.baselib.utils.ToastUtil
 import com.jerry.wifimaster.ConnectReceiver
+import com.jerry.wifimaster.MainApplication
 import com.jerry.wifimaster.NetSpeedHelper
 import com.jerry.wifimaster.R
 import com.jerry.wifimaster.adapter.MenuAdapter
 import com.jerry.wifimaster.adapter.WifisAdapter
 import com.jerry.wifimaster.bean.Menus
 import com.jerry.wifimaster.bean.WifiBean
+import com.jerry.wifimaster.bean.WifiPanelMenu
+import com.jerry.wifimaster.ui.dialog.BaseAlertDialog
+import com.jerry.wifimaster.ui.dialog.BottomPanel
 import com.jerry.wifimaster.utils.CommonUtils
 import com.jerry.wifimaster.utils.NetworkUtil
+import com.jerry.wifimaster.utils.ToastUtils
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
+import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet
 import com.thanosfisherman.wifiutils.WifiUtils
+import com.thanosfisherman.wifiutils.wifiConnect.ConnectionErrorCode
+import com.thanosfisherman.wifiutils.wifiConnect.ConnectionSuccessListener
+import com.thanosfisherman.wifiutils.wifiRemove.RemoveErrorCode
+import com.thanosfisherman.wifiutils.wifiRemove.RemoveSuccessListener
 import kotlinx.android.synthetic.main.wifi_fragment.*
 
 class WifiFragment : BaseAdFragment() {
@@ -97,18 +108,118 @@ class WifiFragment : BaseAdFragment() {
         wifisAdapter.setOnItemClickListener { adapter, view, position ->
            val item= wifisAdapter.data[position]
             item.apply {
+                    var bottomDialog: BottomPanel
                     if(wifisAdapter.wifiName==result.SSID)
                     {
-
+                        bottomDialog=BottomPanel.createCurNetDialog(this@WifiFragment.context,result.SSID)
                     }else
                     {
-
+                        bottomDialog=BottomPanel.createCurNetDialog(this@WifiFragment.context,result.SSID)
                     }
+//                bottomDialog.set
+                bottomDialog.setOnSheetItemClickListener { dialog, itemView ->
+
+                    dialog.dismiss()
+                    val menuItem= itemView.tag as WifiPanelMenu
+                    dealPanelMenu(menuItem,item)
+                }
+                bottomDialog.build().show()
             }
 
         }
     }
 
+    private fun dealPanelMenu(menu:WifiPanelMenu,wifiInfo:WifiBean)
+    {
+        when(menu.type)
+        {
+            WifiPanelMenu.TYPE_PASS_CONNECT->{
+                //WifiUtils.withContext(MainApplication.getInstance()).
+
+               val dialog= BaseAlertDialog.createPasswordDialog(activity,wifiInfo.result.SSID)
+                dialog.setNegativeButtonListener {
+                    dialog.dismiss()
+                }
+                dialog.setPositiveButton("连接")
+                dialog.setPositiveButtonListener {
+                    if(NetworkUtil.isWifiNeedPass(wifiInfo.result))
+                    {
+                        val editText=dialog.customView.findViewById<EditText>(R.id.passEdit)
+                        val text=editText.text.toString()
+                        if(text.isNullOrEmpty())
+                        {
+                            ToastUtil.toast(MainApplication.getInstance(),"请输入密码")
+                        }else
+                        {
+                            WifiUtils.withContext(MainApplication.getInstance()).connectWith(wifiInfo.result.SSID,wifiInfo.result.BSSID,text)
+                                .onConnectionResult(object : ConnectionSuccessListener{
+                                    override fun failed(errorCode: ConnectionErrorCode) {
+                                            ToastUtil.toast(MainApplication.getInstance(),"连接失败")
+                                    }
+
+                                    override fun success() {
+                                        ToastUtil.toast(MainApplication.getInstance(),"连接成功",R.drawable.toast_ok)
+                                    }
+
+                                }).start()
+                        }
+                    }else
+                    {
+                        //不需要密码 直接连接
+                        WifiUtils.withContext(MainApplication.getInstance()).connectWith(wifiInfo.result.SSID,wifiInfo.result.BSSID,"")
+                            .onConnectionResult(object : ConnectionSuccessListener{
+                                override fun failed(errorCode: ConnectionErrorCode) {
+                                    ToastUtil.toast(MainApplication.getInstance(),"连接失败")
+                                }
+
+                                override fun success() {
+                                    ToastUtil.toast(MainApplication.getInstance(),"连接成功",R.drawable.toast_ok)
+                                }
+
+                            }).start()
+                    }
+
+                }
+            }
+            WifiPanelMenu.TYPE_REPORT->{
+                //报告
+               val ssid= wifiInfo.result.SSID
+               val dialog=BaseAlertDialog.createCommonDialog(activity,wifiInfo.result.SSID,"你确定要举报${ssid}作为钓鱼WIFI吗?")
+                dialog.setPositiveButton("确认举报")
+                dialog.setPositiveButtonListener {
+                    ToastUtil.toast(MainApplication.getInstance(),"举报成功")
+                }
+                dialog.show()
+
+            }
+            WifiPanelMenu.TYPE_TEST_SPEED->{
+
+            }
+            WifiPanelMenu.TYPE_CHECK->{
+
+            }
+            WifiPanelMenu.TYPE_FORGET_NET->{
+                val ssid= wifiInfo.result.SSID
+                val dialog=BaseAlertDialog.createCommonDialog(activity,wifiInfo.result.SSID,"你确定要忘记已保存的${ssid}的密码吗?")
+                dialog.setPositiveButton("确认")
+                dialog.setPositiveButtonListener {
+                    WifiUtils.withContext(MainApplication.getInstance()).remove(ssid,object :
+                        RemoveSuccessListener{
+                        override fun failed(errorCode: RemoveErrorCode) {
+                            ToastUtil.toast(MainApplication.getInstance(),"由于系统限制,忘记网络失败")
+                        }
+
+                        override fun success() {
+                            ToastUtil.toast(MainApplication.getInstance(),"断开成功")
+                        }
+
+                    })
+                }
+                dialog.show()
+            }
+        }
+
+    }
     private fun ratatePanel(hide:Boolean)
     {
 //        vPanel.pivotX=0.5f

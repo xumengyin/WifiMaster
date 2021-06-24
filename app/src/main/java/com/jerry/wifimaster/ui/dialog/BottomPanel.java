@@ -10,14 +10,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.jerry.wifimaster.R;
+import com.jerry.wifimaster.bean.WifiPanelMenu;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheetRootLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BottomPanel extends QMUIBottomSheet.BottomGridSheetBuilder {
 
+    static List<WifiPanelMenu> connectedMenus = new ArrayList<>();
+    static List<WifiPanelMenu> unConnectMenus = new ArrayList<>();
 
     static {
-
+        connectedMenus.add(new WifiPanelMenu("网络测速", R.drawable.panel_menu5, WifiPanelMenu.TYPE_TEST_SPEED));
+        connectedMenus.add(new WifiPanelMenu("安全检测", R.drawable.panel_menu4, WifiPanelMenu.TYPE_CHECK));
+        connectedMenus.add(new WifiPanelMenu("举报钓鱼", R.drawable.panel_menu3, WifiPanelMenu.TYPE_REPORT));
+        connectedMenus.add(new WifiPanelMenu("忘记网络", R.drawable.panel_menu2, WifiPanelMenu.TYPE_FORGET_NET));
+        unConnectMenus.add(new WifiPanelMenu("密码连接", R.drawable.panel_menu1, WifiPanelMenu.TYPE_PASS_CONNECT));
+        unConnectMenus.add(new WifiPanelMenu("举报钓鱼", R.drawable.panel_menu3, WifiPanelMenu.TYPE_REPORT));
     }
 
     public int iconId;
@@ -45,11 +56,25 @@ public class BottomPanel extends QMUIBottomSheet.BottomGridSheetBuilder {
     }
 
 
-    public static QMUIBottomSheet createCurNetDialog(Context context,String wifiName,int icon)
-    {
-        BottomPanel bottomPanel=new BottomPanel(context);
-//        bottomPanel.setWifiAndIcon(wifiName,icon)
+    public static BottomPanel createCurNetDialog(Context context, String wifiName) {
+        BottomPanel bottomPanel = new BottomPanel(context);
+        bottomPanel.setWifiAndIcon(wifiName, R.drawable.top_wifi_connect);
 //                    .addItem()
-        return null;
+
+        for (WifiPanelMenu connectedMenu : connectedMenus) {
+            bottomPanel.addItem(connectedMenu.icon, connectedMenu.title,connectedMenu, FIRST_LINE);
+        }
+
+        return bottomPanel;
+    }
+
+    public static BottomPanel createPassNetDialog(Context context, String wifiName) {
+        BottomPanel bottomPanel = new BottomPanel(context);
+        bottomPanel.setWifiAndIcon(wifiName, R.drawable.top_wifi_password);
+        for (WifiPanelMenu connectedMenu : unConnectMenus) {
+            bottomPanel.addItem(connectedMenu.icon, connectedMenu.title,connectedMenu, FIRST_LINE);
+        }
+
+        return bottomPanel;
     }
 }
