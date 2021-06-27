@@ -1,5 +1,7 @@
 package com.jerry.wifimaster.utils;
 
+import android.os.Build;
+
 public class CommonUtils {
 
 
@@ -24,5 +26,20 @@ public class CommonUtils {
             strength="较强";
         }
         return  strength;
+    }
+
+
+    public static String getManufacturer() {
+        return Build.MANUFACTURER;
+    }
+
+    public static String getModel() {
+        String model = Build.MODEL;
+        if (model != null) {
+            model = model.trim().replaceAll("\\s*", "");
+        } else {
+            model = "";
+        }
+        return model;
     }
 }

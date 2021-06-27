@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:background="@drawable/detect_top_bg"
+    tools:context=".ui.DetectiveAniActivity">
+
+
+    <com.jerry.baselib.base.UINavigationView
+        android:id="@+id/uinv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/nav_bar_height" />
+
+
+    <TextView
+        tools:text="扫描中，总共5T爱设备"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    
+    
+    
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        
+        <com.qmuiteam.qmui.layout.QMUIButton
+            android:id="@+id/vCancle"
+            app:qmui_radius="10dp"
+            android:textSize="@dimen/sp_14"
+            android:layout_gravity="center"
+            android:text="取消检测"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:background="#32ffffff"
+            android:layout_width="@dimen/dp_184"
+            android:layout_height="@dimen/dp_44"/>
+    </FrameLayout>
+
+</LinearLayout>

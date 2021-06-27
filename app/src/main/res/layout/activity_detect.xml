@@ -1,9 +1,198 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.DetectActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/vTopLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/detect_top_bg"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <com.jerry.baselib.base.UINavigationView
+            android:id="@+id/uinv"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/nav_bar_height" />
+
+        <TextView
+            android:id="@+id/vWifiNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_35"
+            android:layout_marginBottom="@dimen/dp_44"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:text="共10台设备链接挡圈wifi" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_16"
+        android:layout_marginTop="-22dp"
+        android:layout_marginRight="@dimen/dp_16"
+        android:background="@drawable/edit_bg_shape"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_34"
+            android:background="##ff0082ff">
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:drawableLeft="@drawable/wifi_icon2"
+                    android:drawablePadding="@dimen/dp_2"
+                    android:gravity="center"
+                    android:text="我的WIFI"
+                    android:textColor="@color/text_title_color1"
+                    android:textSize="@dimen/sp_12" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:drawableLeft="@drawable/wifi_icon1"
+                    android:drawablePadding="@dimen/dp_2"
+                    android:gravity="center"
+                    android:text="我的路由器"
+                    android:textColor="@color/text_title_color1"
+                    android:textSize="@dimen/sp_12" />
+
+            </FrameLayout>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/dp_16"
+                android:paddingTop="8dp"
+                android:paddingBottom="@dimen/dp_10">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="IP"
+                    android:textColor="@color/text_content_color1"
+                    android:textSize="@dimen/sp_12" />
+
+                <TextView
+                    android:id="@+id/vIp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_title_color1"
+                    android:textSize="@dimen/sp_12"
+                    tools:text="192.187.192.21" />
+
+            </LinearLayout>
+
+            <view
+                android:layout_width="@dimen/px_1"
+                android:layout_height="match_parent"
+                android:background="@color/line" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/dp_16"
+                android:paddingTop="8dp"
+                android:paddingBottom="@dimen/dp_10">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="型号"
+                    android:textColor="@color/text_content_color1"
+                    android:textSize="@dimen/sp_12" />
+
+                <TextView
+                    android:id="@+id/vXinghao"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_title_color1"
+                    android:textSize="@dimen/sp_12"
+                    tools:text="192.187.192.21" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_margin="@dimen/dp_16"
+      android:layout_height="wrap_content">
+    <LinearLayout
+        android:id="@+id/vAdContent"
+        android:orientation="vertical"
+        app:layout_constraintDimensionRatio="16:9"
+        android:layout_width="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_height="0dp">
+    </LinearLayout>
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/vDeviceRv"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_marginLeft="@dimen/dp_16"
+        android:layout_marginRight="@dimen/dp_16"
+        android:layout_height="0dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:background="@drawable/base_bottom_tab_bg"
+        android:padding="@dimen/dp_5"
+        android:layout_height="wrap_content">
+        <com.qmuiteam.qmui.layout.QMUIButton
+            android:id="@+id/vCheck"
+            android:text="重新检测"
+            android:textColor="@color/white"
+            android:layout_width="@dimen/dp_144"
+            android:background="#09D491"
+            app:qmui_radius="10dp"
+            android:layout_height="@dimen/dp_36"/>
+
+    </LinearLayout>
+
+</LinearLayout>
