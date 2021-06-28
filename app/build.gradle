@@ -30,6 +30,22 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    signingConfigs {
+
+        debug {
+            storeFile file("makestep.jks")
+            storePassword 'yxlqaz001'
+            keyAlias 'makestep'
+            keyPassword 'yxlqaz001'
+        }
+
+        release {
+            storeFile file("makestep.jks")
+            storePassword 'yxlqaz001'
+            keyAlias 'makestep'
+            keyPassword 'yxlqaz001'
+        }
+    }
 }
 repositories {
     flatDir {
