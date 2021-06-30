@@ -15,6 +15,7 @@ public class Constants {
     public static final String ADS_APPID="a60c187f5dc2f2";
     public static final String ADS_APP_KEY="d690d889f2dc3a1e66d3809a15303be3";
     public static final String ADS_SPLASH="b60cc34b54ddad";
+    public static final String ADS_XINXILIU="b60dc180aa8376";
 
 
 

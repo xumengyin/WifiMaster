@@ -10,7 +10,7 @@ import com.anythink.splashad.api.ATSplashExListenerWithConfirmInfo;
 import com.anythink.splashad.api.IATSplashEyeAd;
 import com.jerry.baselib.utils.LogUtils;
 
-public  class BaseAdActivity extends BaseActivity implements ATSplashExListenerWithConfirmInfo {
+public  class BaseSplashAdActivity extends BaseActivity implements ATSplashExListenerWithConfirmInfo {
 
     private static final String TAG = "BaseAdActivity";
 

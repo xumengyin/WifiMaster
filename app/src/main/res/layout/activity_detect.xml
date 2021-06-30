@@ -46,7 +46,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_34"
-            android:background="##ff0082ff">
+            android:background="#0b0082ff">
 
             <FrameLayout
                 android:layout_width="0dp"
@@ -155,10 +155,11 @@
     </LinearLayout>
 
   <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/vMainAd"
       android:layout_width="match_parent"
       android:layout_margin="@dimen/dp_16"
       android:layout_height="wrap_content">
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/vAdContent"
         android:orientation="vertical"
         app:layout_constraintDimensionRatio="16:9"
@@ -167,7 +168,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_height="0dp">
-    </LinearLayout>
+    </FrameLayout>
   </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView

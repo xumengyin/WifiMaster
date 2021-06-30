@@ -2,27 +2,24 @@ package com.jerry.wifimaster.ui
 
 import android.Manifest
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.anythink.core.api.ATAdConst
 import com.anythink.core.api.ATAdInfo
-import com.anythink.core.api.ATSDK
 import com.anythink.core.api.AdError
 import com.anythink.splashad.api.ATSplashAd
 import com.anythink.splashad.api.IATSplashEyeAd
-import com.jerry.baselib.base.BaseAdActivity
+import com.jerry.baselib.base.BaseSplashAdActivity
 import com.jerry.baselib.utils.LogUtils
 import com.jerry.wifimaster.Constants
 import com.jerry.wifimaster.MainActivity
 import com.jerry.wifimaster.R
 import com.jerry.wifimaster.perference.SettingPreference
 import com.jerry.wifimaster.ui.dialog.CustomAgreementDialog
-import com.jerry.wifimaster.utils.Logs
 import com.jerry.wifimaster.utils.OaidHelper
 import com.tbruyelle.rxpermissions3.RxPermissions
 import kotlinx.android.synthetic.main.activity_splash.*
 
-class SplashActivity : BaseAdActivity() {
+class SplashActivity : BaseSplashAdActivity() {
 
 
     var argeementDialog: CustomAgreementDialog? = null
