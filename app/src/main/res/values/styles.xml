@@ -6,6 +6,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="backgroundColor">@color/bg_color</item>
+
+        <item name="qmui_bottom_sheet_grid_item_text_margin_top">1dp</item>
     </style>
 
     <style name="splashTheme" parent="AppTheme">

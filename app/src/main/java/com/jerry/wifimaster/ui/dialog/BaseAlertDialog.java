@@ -37,7 +37,7 @@ public class BaseAlertDialog extends Dialog {
     /**
      * 内容区域
      */
-    private View mContentMsg;
+    //private View mContentMsg;
 
     /**
      * 右边按钮
@@ -86,8 +86,8 @@ public class BaseAlertDialog extends Dialog {
         setCanceledOnTouchOutside(true);
 
         mTitle = (TextView) findViewById(R.id.tv_sub_tile);
-        mMessage = (TextView) findViewById(R.id.message);
-        mContentMsg = findViewById(R.id.msg);
+        mMessage = (TextView) findViewById(R.id.msg);
+       // mContentMsg = findViewById(R.id.msg);
         mCustomPanel = findViewById(R.id.content);
         mPositiveBtn = (Button) findViewById(R.id.btn_ok);
         mNegativeBtn = (Button) findViewById(R.id.btn_cancel);
@@ -107,21 +107,21 @@ public class BaseAlertDialog extends Dialog {
     }
 
     public BaseAlertDialog setMessage(CharSequence message) {
-        mContentMsg.setVisibility(View.VISIBLE);
+        mMessage.setVisibility(View.VISIBLE);
         mCustomPanel.setVisibility(View.GONE);
         mMessage.setText(message);
         return this;
     }
 
     public BaseAlertDialog setMessage(int messageId) {
-        mContentMsg.setVisibility(View.VISIBLE);
+        mMessage.setVisibility(View.VISIBLE);
         mCustomPanel.setVisibility(View.GONE);
         mMessage.setText(messageId);
         return this;
     }
 
     public BaseAlertDialog setCustomView(int resId) {
-        mContentMsg.setVisibility(View.GONE);
+        mMessage.setVisibility(View.GONE);
         mCustomPanel.setVisibility(View.VISIBLE);
         View customView = View.inflate(mContext, resId, null);
         ((FrameLayout) mCustomPanel).addView(customView);

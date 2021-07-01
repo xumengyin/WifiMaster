@@ -112,7 +112,7 @@ class WifiFragment : BaseNativeAdFragment() {
                         BottomPanel.createCurNetDialog(this@WifiFragment.context, result.SSID)
                 } else {
                     bottomDialog =
-                        BottomPanel.createCurNetDialog(this@WifiFragment.context, result.SSID)
+                        BottomPanel.createPassNetDialog(this@WifiFragment.context, result.SSID)
                 }
 //                bottomDialog.set
                 bottomDialog.setOnSheetItemClickListener { dialog, itemView ->

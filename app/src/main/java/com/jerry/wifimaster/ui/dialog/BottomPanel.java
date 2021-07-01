@@ -49,7 +49,7 @@ public class BottomPanel extends QMUIBottomSheet.BottomGridSheetBuilder {
     @Override
     protected View onCreateTitleView(@NonNull QMUIBottomSheet bottomSheet, @NonNull QMUIBottomSheetRootLayout rootLayout, @NonNull Context context) {
 
-        View v = LayoutInflater.from(context).inflate(R.layout.panel_title_view, null, false);
+        View v = LayoutInflater.from(context).inflate(R.layout.panel_title_view, rootLayout, false);
         ((TextView) v.findViewById(R.id.wifiName)).setText(this.wifiName);
         ((ImageView) v.findViewById(R.id.wifiLock)).setImageResource(this.iconId);
         return v;
