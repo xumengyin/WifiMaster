@@ -36,9 +36,9 @@ import java.util.Enumeration;
  * <p/>
  * Created by 郭攀峰 on 2015/10/20.
  */
-public class NetworkUtil {
+public class DeviceScanNetworkUtil {
 
-    private static final String tag = NetworkUtil.class.getSimpleName();
+    private static final String tag = DeviceScanNetworkUtil.class.getSimpleName();
 
 
     public static boolean isWifiNeedPass(ScanResult result) {
@@ -333,8 +333,9 @@ public class NetworkUtil {
                     new InputStreamReader(p.getInputStream()));
             String line;
             while ((line = in.readLine()) != null) {
+                Log.d(tag, "ping result = " + line);
                 if (line.contains("bytes from")) {
-                    Log.d(tag, "ping result = " + line);
+                   // Log.d(tag, "ping result = " + line);
                     result += line + "\n";
                 }
             }

@@ -66,10 +66,8 @@ dependencies {
     implementation 'com.thanosfisherman.wifiutils:wifiutils:1.6.5'
     implementation 'com.github.tbruyelle:rxpermissions:0.12'
     implementation "io.reactivex.rxjava3:rxjava:3.0.12"
-    implementation 'com.yanzhenjie.nohttp:nohttp:1.1.11'
-    implementation 'com.yanzhenjie.nohttp:okhttp:1.1.11'
-    compile 'com.squareup.okhttp3:okhttp:3.12.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.12.0'
+    implementation 'com.blankj:utilcodex:1.30.6'
+
 //    implementation 'com.dinuscxj:recycleritemdecoration:1.0.0'
 
 

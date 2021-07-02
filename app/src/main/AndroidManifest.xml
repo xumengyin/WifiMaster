@@ -17,6 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ui.NetSpeedActivity"/>
+        <activity android:name=".ui.NetSpeedAniActivity"/>
         <activity android:name=".ui.DetectiveAniActivity" />
         <activity android:name=".ui.DetectActivity" />
 

@@ -6,7 +6,7 @@ import android.util.Log;
 import com.jerry.wifimaster.MainApplication;
 import com.jerry.wifimaster.entity.DeviceInfo;
 import com.jerry.wifimaster.utils.Constant;
-import com.jerry.wifimaster.utils.NetworkUtil;
+import com.jerry.wifimaster.utils.DeviceScanNetworkUtil;
 
 import java.io.IOException;
 
@@ -40,8 +40,8 @@ public class DeviceScanTask {
 
     private class DeviceScanRunnable implements Runnable {
         public void run() {
-            if (NetworkUtil.isPingOk(mIpMac.mIp) ||
-                    NetworkUtil.isAnyPortOk(mIpMac.mIp)) {
+            if (DeviceScanNetworkUtil.isPingOk(mIpMac.mIp) ||
+                    DeviceScanNetworkUtil.isAnyPortOk(mIpMac.mIp)) {
                 String manufacture = parseHostInfo(mIpMac.mMac); //解析机器名称
                 Log.e(tag, "the device is in wifi : " + mIpMac.toString() + "" +
                         " manufacture = " + manufacture);

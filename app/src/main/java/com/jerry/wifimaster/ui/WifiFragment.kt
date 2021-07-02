@@ -1,5 +1,6 @@
 package com.jerry.wifimaster.ui
 
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.wifi.WifiInfo
 import android.os.Bundle
@@ -9,6 +10,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.util.NetworkUtils
 import com.jerry.baselib.utils.LogUtils
 import com.jerry.baselib.utils.ToastUtil
 import com.jerry.wifimaster.*
@@ -20,7 +23,7 @@ import com.jerry.wifimaster.bean.WifiPanelMenu
 import com.jerry.wifimaster.ui.dialog.BaseAlertDialog
 import com.jerry.wifimaster.ui.dialog.BottomPanel
 import com.jerry.wifimaster.utils.CommonUtils
-import com.jerry.wifimaster.utils.NetworkUtil
+import com.jerry.wifimaster.utils.DeviceScanNetworkUtil
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.thanosfisherman.wifiutils.WifiUtils
 import com.thanosfisherman.wifiutils.wifiConnect.ConnectionErrorCode
@@ -138,7 +141,7 @@ class WifiFragment : BaseNativeAdFragment() {
                 }
                 dialog.setPositiveButton("连接")
                 dialog.setPositiveButtonListener {
-                    if (NetworkUtil.isWifiNeedPass(wifiInfo.result)) {
+                    if (DeviceScanNetworkUtil.isWifiNeedPass(wifiInfo.result)) {
                         val editText = dialog.customView.findViewById<EditText>(R.id.passEdit)
                         val text = editText.text.toString()
                         if (text.isNullOrEmpty()) {
@@ -199,7 +202,8 @@ class WifiFragment : BaseNativeAdFragment() {
 
             }
             WifiPanelMenu.TYPE_TEST_SPEED -> {
-
+                    //测速度
+                startActivity(Intent(activity,NetSpeedAniActivity::class.java))
             }
             WifiPanelMenu.TYPE_CHECK -> {
 
@@ -262,8 +266,8 @@ class WifiFragment : BaseNativeAdFragment() {
         activity?.apply {
             var d: Drawable? = null
             var text = "未连接WIFI"
-            if (NetworkUtil.getWifiEnabled(this)) {
-                val netWork = NetworkUtil.getWifiInfo(this)
+            if (DeviceScanNetworkUtil.getWifiEnabled(this)) {
+                val netWork = DeviceScanNetworkUtil.getWifiInfo(this)
                 if (netWork != null) {
                     LogUtils.logd(netWork.toString())
                     if (menuAdapter.data.isEmpty()) {
@@ -285,7 +289,7 @@ class WifiFragment : BaseNativeAdFragment() {
                         d = ContextCompat.getDrawable(this, R.drawable.wifi_b2)
                     val connectSpeed =
                         if (netWork.linkSpeed == WifiInfo.LINK_SPEED_UNKNOWN) "未知" else "" + netWork.linkSpeed + WifiInfo.LINK_SPEED_UNITS
-                    val ip = NetworkUtil.getLocalIp()
+                    val ip = DeviceScanNetworkUtil.getLocalIp()
                     Menus.menus.forEachIndexed { index, menus ->
                         if (menus.type == MenuAdapter.TYPE_SIGNAL_STREHGTH) {
                             menus.descValue = strength
@@ -325,10 +329,8 @@ class WifiFragment : BaseNativeAdFragment() {
 
     private fun scanWifi() {
         activity?.apply {
-            if (NetworkUtil.getWifiEnabled(this)) {
-                var curSSid = ""
-                val wifiInfo = NetworkUtil.getWifiInfo(this)
-                curSSid = if (wifiInfo == null) "" else wifiInfo.ssid.replace("\"", "")
+            if (DeviceScanNetworkUtil.getWifiEnabled(this)) {
+                val curSSid = NetworkUtils.getSSID()
                 val dataList = mutableListOf<WifiBean>()
                 WifiUtils.withContext(this).scanWifi { it ->
                     it.forEach {

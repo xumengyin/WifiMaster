@@ -11,7 +11,7 @@ import com.jerry.wifimaster.R
 import com.jerry.wifimaster.adapter.ScanDevicesAdapter
 import com.jerry.wifimaster.devicescan.IP_MAC
 import com.jerry.wifimaster.utils.CommonUtils
-import com.jerry.wifimaster.utils.NetworkUtil
+import com.jerry.wifimaster.utils.DeviceScanNetworkUtil
 import kotlinx.android.synthetic.main.activity_detect.*
 
 class DetectActivity : BaseNativeAdActivity() {
@@ -45,7 +45,7 @@ class DetectActivity : BaseNativeAdActivity() {
             vXinghao.text = CommonUtils.getModel()
         }
 
-        val ip = NetworkUtil.getLocalIp()
+        val ip = DeviceScanNetworkUtil.getLocalIp()
         if (ip.isNullOrBlank()) {
             vIp.text = "未知"
         } else {

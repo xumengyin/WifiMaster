@@ -13,11 +13,24 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/nav_bar_height" />
 
-    <com.jerry.wifimaster.ui.views.SpeedTestView
-        android:id="@+id/vSpeedView"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
 
+        <com.jerry.wifimaster.ui.views.SpeedTestView
+            android:id="@+id/vSpeedView"
+            android:layout_marginLeft="@dimen/dp_20"
+            android:layout_marginRight="@dimen/dp_20"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.jerry.wifimaster.ui.views.SpeedRippleView
+            android:id="@+id/ripplrView"
+            android:layout_marginLeft="@dimen/dp_20"
+            android:layout_marginRight="@dimen/dp_20"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/vWifiName2"
@@ -68,6 +81,14 @@
                 android:layout_marginTop="@dimen/dp_3"
                 android:textColor="@color/white"
                 tools:text="20ms" />
+            <ImageView
+                android:id="@+id/vLoadAni0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/title1"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/speed_load_ani"
+                android:visibility="gone" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -146,7 +167,7 @@
         android:layout_height="@dimen/dp_44"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/dp_44"
-        android:background="#a0ffffff"
+        android:background="#80ffffff"
         android:text="开始测速"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_14"

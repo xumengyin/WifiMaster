@@ -9,6 +9,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.jerry.baselib.http.AbstractRequest;
+import com.jerry.baselib.http.CallServer;
+import com.jerry.baselib.http.HttpCallback;
+
 public abstract class BaseFragment extends Fragment implements BaseViewInterface{
 
 
@@ -22,6 +26,20 @@ public abstract class BaseFragment extends Fragment implements BaseViewInterface
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         initViews();
+    }
+    /**
+     * 异步请求，是否显示dialog。
+     */
+    public <T> void request(@NonNull AbstractRequest<T> request, boolean dialog,
+                            HttpCallback<T> httpCallback) {
+        request.setCancelSign(this);
+        CallServer.getInstance().request(getContext(), request, httpCallback, dialog);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        CallServer.getInstance().cancelBySign(this);
     }
 
     @Override

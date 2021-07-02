@@ -45,4 +45,10 @@ dependencies {
     api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
     api project(path: ':adLibs')
     api 'com.github.GrenderG:Toasty:1.5.0'
+
+    api 'com.yanzhenjie.nohttp:nohttp:1.1.11'
+    api 'com.yanzhenjie.nohttp:okhttp:1.1.11'
+    api 'com.squareup.okhttp3:okhttp:3.12.0'
+    api 'com.squareup.okhttp3:logging-interceptor:3.12.0'
+    api 'com.google.code.gson:gson:2.7'
 }

@@ -92,11 +92,6 @@ public class SpeedTestView extends View {
         mRectText = new Rect();
         mPath = new Path();
 
-//        mBgColors = new int[]{ContextCompat.getColor(getContext(), R.color.color_red),
-//                ContextCompat.getColor(getContext(), R.color.color_orange),
-//                ContextCompat.getColor(getContext(), R.color.color_yellow),
-//                ContextCompat.getColor(getContext(), R.color.color_green),
-//                ContextCompat.getColor(getContext(), R.color.color_blue)};
     }
 
     @Override
@@ -358,6 +353,21 @@ public class SpeedTestView extends View {
         return "信用较差";
     }
 
+    /**
+     * 信用分对应信用描述
+     */
+    private int calculateBGColorWithValue(int value) {
+        if (value > 700) {
+            return mBgColors[4];
+        } else if (value > 650) {
+            return mBgColors[3];
+        } else if (value > 600) {
+            return mBgColors[2];
+        } else if (value > 550) {
+            return mBgColors[1];
+        }
+        return mBgColors[0];
+    }
 
     private SimpleDateFormat mDateFormat;
 

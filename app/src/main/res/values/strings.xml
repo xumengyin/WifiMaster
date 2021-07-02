@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">WifiMaster</string>
+    <string name="default_value">未知</string>
 </resources>

@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.jerry.wifimaster.utils.Constant;
-import com.jerry.wifimaster.utils.NetworkUtil;
+import com.jerry.wifimaster.utils.DeviceScanNetworkUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,8 +51,8 @@ public class DeviceScanHandler extends Handler
         mContext = context;
         mUiHandler = uiHandler;
 
-        String localIp = NetworkUtil.getLocalIp();
-        String routerIp = NetworkUtil.getGateWayIp(mContext);
+        String localIp = DeviceScanNetworkUtil.getLocalIp();
+        String routerIp = DeviceScanNetworkUtil.getGateWayIp(mContext);
         if (TextUtils.isEmpty(localIp) || TextUtils.isEmpty(routerIp))
             return;
 

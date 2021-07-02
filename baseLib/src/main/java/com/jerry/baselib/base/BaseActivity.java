@@ -16,11 +16,15 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import com.jerry.baselib.R;
+import com.jerry.baselib.http.AbstractRequest;
+import com.jerry.baselib.http.CallServer;
+import com.jerry.baselib.http.HttpCallback;
 import com.jerry.baselib.utils.Configs;
 import com.jerry.baselib.utils.LogUtils;
 
@@ -52,6 +56,14 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
         }
     }
 
+    /**
+     * 异步请求，是否显示dialog。
+     */
+    public <T> void request(@NonNull AbstractRequest<T> request, boolean dialog,
+                            HttpCallback<T> httpCallback) {
+        request.setCancelSign(this);
+        CallServer.getInstance().request(this, request, httpCallback, dialog);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +94,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
     protected void onDestroy() {
         super.onDestroy();
         releaseImageView();
+        CallServer.getInstance().cancelBySign(this);
     }
 
     /**

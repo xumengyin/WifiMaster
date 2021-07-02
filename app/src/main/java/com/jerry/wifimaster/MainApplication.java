@@ -6,6 +6,9 @@ import android.os.Build;
 import android.webkit.WebView;
 
 import com.anythink.core.api.ATSDK;
+import com.yanzhenjie.nohttp.InitializationConfig;
+import com.yanzhenjie.nohttp.NoHttp;
+import com.yanzhenjie.nohttp.OkHttpNetworkExecutor;
 
 
 /**
@@ -41,6 +44,18 @@ public class MainApplication extends Application
         mInstance = this;
         adapterWebView();
         initAds();
+        initThrid();
+    }
+
+
+    private void initThrid()
+    {
+        InitializationConfig config = InitializationConfig.newBuilder(this)
+                .connectionTimeout(30 * 1000)
+                .readTimeout(30 * 1000)
+                .networkExecutor(new OkHttpNetworkExecutor())
+                .build();
+        NoHttp.initialize(config);
     }
 
     public static MainApplication getInstance()
