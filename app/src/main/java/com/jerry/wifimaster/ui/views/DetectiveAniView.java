@@ -74,7 +74,7 @@ public class DetectiveAniView extends View {
     private void init() {
 
         bitmap=  BitmapFactory.decodeResource(getResources(), R.drawable.detective_dun);
-        mProgressWidth = dp2px(12);
+        mProgressWidth = dp2px(10);
         mProgressPaint = new Paint();
         mImgPaint = new Paint();
         mImgPaint.setAntiAlias(true);
@@ -91,7 +91,7 @@ public class DetectiveAniView extends View {
 
 
         mCirclePaint = new Paint();
-        mCirclePaint.setColor(Color.parseColor("#80ff0000"));
+        mCirclePaint.setColor(Color.parseColor("#80ffffff"));
         mCirclePaint.setAntiAlias(true);
 
         mCircleAniPaint = new Paint();
@@ -128,12 +128,12 @@ public class DetectiveAniView extends View {
         mRectFProgressArc.set(-mCenterX + outGapLength + mProgressWidth / 2, -mCenterX + outGapLength + mProgressWidth / 2
                 , mCenterX - outGapLength - mProgressWidth / 2,
                 mCenterX - outGapLength - mProgressWidth / 2);
-        startAnimate();
+        //startAnimate();
     }
 
     private SweepGradient generateSweepGradient() {
         SweepGradient sweepGradient = new SweepGradient(0, 0,
-                new int[]{Color.argb(0, 255, 0, 0), Color.argb(255, 255, 0, 0)},
+                new int[]{Color.argb(0, 255, 255, 255), Color.argb(255, 255, 255, 255)},
                 new float[]{0f, 0.95f});
 //        Matrix matrix = new Matrix();
 //        matrix.setRotate(mStartAngle - 1, mCenterX, mCenterY);
@@ -251,14 +251,18 @@ public class DetectiveAniView extends View {
         drawAniCircle(canvas);
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
+    public void stop()
+    {
         if (animatorSet != null) {
             animatorSet.removeAllListeners();
             animatorSet.cancel();
             animatorSet = null;
         }
+    }
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        stop();
     }
 
     private int dp2px(int dp) {

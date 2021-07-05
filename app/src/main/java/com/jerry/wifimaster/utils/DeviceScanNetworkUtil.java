@@ -318,6 +318,20 @@ public class DeviceScanNetworkUtil {
         return false;
     }
 
+    //获取平均延时
+    public static String getPingRTT(String ip, String count) {
+        String res = "";
+        String pingResult = ping(ip, count);
+        if (TextUtils.isEmpty(pingResult)) {
+            return "0";
+        } else {
+            String tempInfo = pingResult.substring(pingResult.indexOf("min/avg/max/mdev") + 19);
+            String[] temps = tempInfo.split("/");
+            res = temps[1];
+        }
+        return res;
+
+    }
 
     public static String ping(String ip, String count) {
         String result = "";
@@ -334,10 +348,10 @@ public class DeviceScanNetworkUtil {
             String line;
             while ((line = in.readLine()) != null) {
                 Log.d(tag, "ping result = " + line);
-                if (line.contains("bytes from")) {
-                   // Log.d(tag, "ping result = " + line);
+                //if (line.contains("bytes from")) {
+                    // Log.d(tag, "ping result = " + line);
                     result += line + "\n";
-                }
+                //}
             }
         } catch (IOException e) {
             e.printStackTrace();

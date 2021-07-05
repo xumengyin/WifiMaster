@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent"
     android:background="@drawable/detect_top_bg"
+    android:orientation="vertical"
     tools:context=".ui.DetectiveAniActivity">
 
 
@@ -14,33 +14,39 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/nav_bar_height" />
 
+    <com.jerry.wifimaster.ui.views.DetectiveAniView
+        android:id="@+id/vDetectView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_30" />
 
     <TextView
-        tools:text="扫描中，总共5T爱设备"
+        android:id="@+id/vNumTip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:textColor="@color/white"
         android:textSize="14sp"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    
-    
-    
+        tools:text="扫描中，总共5T爱设备" />
+
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
-        
+
         <com.qmuiteam.qmui.layout.QMUIButton
             android:id="@+id/vCancle"
-            app:qmui_radius="10dp"
-            android:textSize="@dimen/sp_14"
-            android:layout_gravity="center"
-            android:text="取消检测"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:background="#32ffffff"
             android:layout_width="@dimen/dp_184"
-            android:layout_height="@dimen/dp_44"/>
+            android:layout_height="@dimen/dp_44"
+            android:layout_gravity="center"
+            android:background="#32ffffff"
+            android:gravity="center"
+            android:tag="0"
+            android:text="开始检测"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            app:qmui_radius="10dp" />
     </FrameLayout>
 
 </LinearLayout>

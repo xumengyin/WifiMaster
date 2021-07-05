@@ -121,13 +121,13 @@ public abstract class BaseNativeAdFragment extends BaseFragment {
         atNative = new ATNative(getContext(), adIds, new ATNativeNetworkListener() {
             @Override
             public void onNativeAdLoaded() {
-                LogUtils.logi(TAG, "onNativeAdLoaded");
+                LogUtils.logi("onNativeAdLoaded");
                 showAds();
             }
 
             @Override
             public void onNativeAdLoadFail(AdError adError) {
-                LogUtils.logi(TAG, "onNativeAdLoadFail:"+adError.toString());
+                LogUtils.logi("onNativeAdLoadFail:"+adError.toString());
             }
         });
 

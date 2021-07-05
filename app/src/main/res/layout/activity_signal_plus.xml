@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.DetectActivity">
+
+
+    <LinearLayout
+        android:id="@+id/vTopLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/detect_top_bg"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <com.jerry.baselib.base.UINavigationView
+            android:id="@+id/uinv"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/nav_bar_height" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp_16">
+
+
+            <ImageView
+                android:id="@+id/bg1"
+                android:layout_width="@dimen/dp_178"
+                android:layout_height="@dimen/dp_178"
+                android:src="@drawable/signal_circlr_bg"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/bg2"
+                android:layout_width="@dimen/dp_134"
+                android:layout_height="@dimen/dp_134"
+                android:src="@drawable/signal_plus_bg2"
+                app:layout_constraintBottom_toBottomOf="@id/bg1"
+                app:layout_constraintLeft_toLeftOf="@id/bg1"
+                app:layout_constraintRight_toRightOf="@id/bg1"
+                app:layout_constraintTop_toTopOf="@id/bg1" />
+
+
+            <TextView
+                android:id="@+id/vSignal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_content_color3"
+                android:textSize="44sp"
+                app:layout_constraintBottom_toTopOf="@id/title1"
+                app:layout_constraintLeft_toLeftOf="@id/bg2"
+                app:layout_constraintRight_toRightOf="@id/bg2"
+                app:layout_constraintTop_toTopOf="@id/bg2"
+                app:layout_constraintVertical_chainStyle="packed"
+                tools:text="88%" />
+
+            <TextView
+                android:id="@+id/title1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="信号强度"
+                android:textColor="@color/text_content_color3"
+                app:layout_constraintBottom_toBottomOf="@id/bg2"
+                app:layout_constraintLeft_toLeftOf="@id/bg2"
+                app:layout_constraintRight_toRightOf="@id/bg2"
+                app:layout_constraintTop_toBottomOf="@id/vSignal" />
+
+
+            <TextView
+                android:id="@+id/vWifiName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_17"
+                app:drawableStartCompat="@drawable/wifi_w1"
+                app:layout_constraintBottom_toTopOf="@+id/vTiptitle"
+                app:layout_constraintLeft_toRightOf="@+id/bg1"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed"
+                tools:text="wifi名称" />
+
+            <TextView
+                android:id="@+id/vTiptitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_17"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/bg1"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/vWifiName"
+                tools:text="wifi名称" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </LinearLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:id="@+id/vAdContent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"></FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

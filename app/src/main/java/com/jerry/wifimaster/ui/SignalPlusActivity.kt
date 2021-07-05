@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.NetworkUtils
 import com.jerry.wifimaster.Constants
 import com.jerry.wifimaster.R
 import com.jerry.wifimaster.adapter.ScanDevicesAdapter
@@ -18,16 +19,15 @@ import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import kotlinx.android.synthetic.main.activity_detect.*
 import kotlinx.android.synthetic.main.activity_detect.uinv
+import kotlinx.android.synthetic.main.activity_detect.vAdContent
 import kotlinx.android.synthetic.main.activity_detective_ani.*
+import kotlinx.android.synthetic.main.activity_signal_plus.*
 
-class DetectActivity : BaseNativeAdActivity() {
+class SignalPlusActivity : BaseNativeAdActivity() {
 
-    val scanAdapter by lazy {
-        ScanDevicesAdapter(mutableListOf())
-    }
-    var listData = mutableListOf<IP_MAC>()
+
     override fun getLayoutId(): Int {
-        return R.layout.activity_detect
+        return R.layout.activity_signal_plus
     }
 
     override fun getAdsContentView(): View {
@@ -38,29 +38,19 @@ class DetectActivity : BaseNativeAdActivity() {
     }
 
     override fun onCloseAds() {
-        vMainAd.visibility = GONE
+        //vMainAd.visibility = GONE
     }
 
     override fun loadData(savedInstanceState: Bundle?) {
-        listData = intent.getSerializableExtra(Constants.INTENT_KEY) as MutableList<IP_MAC>
 
-        vWifiNum.text="共${listData.size}台设备连接当前WIFI"
-        scanAdapter.setList(listData)
-        val m = CommonUtils.getManufacturer()
-        if (m.isNullOrBlank()) {
-            vXinghao.text = m
-        } else {
-            vXinghao.text = CommonUtils.getModel()
-        }
+        val strehgth=intent.getIntExtra(Constants.INTENT_KEY,5)
 
-        val ip = DeviceScanNetworkUtil.getLocalIp()
-        if (ip.isNullOrBlank()) {
-            vIp.text = "未知"
-        } else {
-            vIp.text = ip
-        }
+        vSignal.text="${strehgth}%"
+        vTiptitle.text="信号增强了${strehgth}"
         //加载广告
         requestAds(Constants.ADS_XINXILIU)
+        vWifiName.text=NetworkUtils.getSSID()
+
     }
 
 
@@ -71,21 +61,8 @@ class DetectActivity : BaseNativeAdActivity() {
         val params = uinv.layoutParams as ViewGroup.MarginLayoutParams
         params.topMargin = statusHeight
         uinv.layoutParams = params
-        uinv.setNavigationTitle("安全检测")
-        vCheck.setOnClickListener {
-            startActivity(Intent(this@DetectActivity,DetectiveAniActivity::class.java))
-        }
-        vDeviceRv.apply {
-            layoutManager = LinearLayoutManager(this@DetectActivity)
-            adapter = scanAdapter
-            //scanAdapter.setEmptyView()
+        uinv.setNavigationTitle("增强结果")
 
-            val divider = DividerItemDecoration(this@DetectActivity, LinearLayoutManager.VERTICAL)
-            ContextCompat.getDrawable(context, R.drawable.base_divider)
-                ?.let { divider.setDrawable(it) }
-            addItemDecoration(divider)
-
-        }
 
     }
 }

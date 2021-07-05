@@ -14,7 +14,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/unknow_icon" />
+        android:src="@drawable/unknow_icon" />
 
     <TextView
         android:id="@+id/vDeviceName"
@@ -34,7 +34,6 @@
         android:id="@+id/vDeviceIp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:textColor="@color/text_content_color1"
         android:textSize="@dimen/sp_12"
         app:layout_constraintBottom_toBottomOf="parent"

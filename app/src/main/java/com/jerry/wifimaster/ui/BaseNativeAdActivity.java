@@ -120,12 +120,13 @@ public abstract class BaseNativeAdActivity extends BaseActivity {
         atNative = new ATNative(this, adIds, new ATNativeNetworkListener() {
             @Override
             public void onNativeAdLoaded() {
-                LogUtils.logi(TAG, "onNativeAdLoaded");
+                LogUtils.logi("onNativeAdLoaded");
+                showAds();
             }
 
             @Override
             public void onNativeAdLoadFail(AdError adError) {
-
+                LogUtils.logi("onNativeAdLoadFail:"+adError.toString());
             }
         });
 

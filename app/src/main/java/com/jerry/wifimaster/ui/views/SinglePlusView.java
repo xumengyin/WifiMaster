@@ -58,12 +58,18 @@ public class SinglePlusView extends View {
         int width = resolveSize(dp2px(220), widthMeasureSpec);
 
         mCenterX = mCenterY = getMeasuredWidth() / 2f;
-
+        setMeasuredDimension(width, width);
         imgRadius = mCenterX - outGap;
         dstRect.set(-imgRadius, -imgRadius, imgRadius, imgRadius);
         minAniRadius = imgRadius;
-        maxAniRadius=mCenterX*2;
-        startAnimate();
+        maxAniRadius = mCenterX * 2;
+        // startAnimate();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        stopAni();
     }
 
     private int dp2px(int dp) {
@@ -73,13 +79,17 @@ public class SinglePlusView extends View {
 
     ValueAnimator animator;
     long andmateDuration = 2000;
-    float minAniRadius,maxAniRadius;
+    float minAniRadius, maxAniRadius;
 
-    public void startAnimate() {
+    public void stopAni() {
         if (animator != null) {
             animator.cancel();
             animator = null;
         }
+    }
+
+    public void startAnimate() {
+        stopAni();
         animator = ValueAnimator.ofFloat(0, 360);
 
 
@@ -89,8 +99,8 @@ public class SinglePlusView extends View {
                 rotateDegree = (float) animation.getAnimatedValue();
 
                 for (int i = 0; i < ringRadius.length; i++) {
-                    aniRingAlpha= (int) (maxAniAlpha-(maxAniAlpha-minAniAlpha)*animation.getAnimatedFraction());
-                    ringRadius[i] =(maxAniRadius-minAniRadius)/(i+1)*animation.getAnimatedFraction()+minAniRadius;
+                    aniRingAlpha = (int) (maxAniAlpha - (maxAniAlpha - minAniAlpha) * animation.getAnimatedFraction());
+                    ringRadius[i] = (maxAniRadius - minAniRadius) / (i + 1) * animation.getAnimatedFraction() + minAniRadius;
                 }
                 invalidate();
 

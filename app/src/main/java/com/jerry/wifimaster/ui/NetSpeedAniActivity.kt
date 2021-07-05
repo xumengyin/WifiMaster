@@ -8,11 +8,13 @@ import android.os.Message
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import com.blankj.utilcode.util.NetworkUtils
 import com.jerry.baselib.base.BaseActivity
 import com.jerry.baselib.http.Download
 import com.jerry.baselib.http.DownloadCallback
 import com.jerry.baselib.utils.LogUtils
+import com.jerry.baselib.utils.SpanUtils
 import com.jerry.baselib.utils.ToastUtil
 import com.jerry.wifimaster.Constants
 import com.jerry.wifimaster.R
@@ -25,21 +27,19 @@ import com.yanzhenjie.nohttp.download.DownloadRequest
 import kotlinx.android.synthetic.main.activity_netspeed_ani.*
 import java.io.File
 
-class NetSpeedAniActivity : BaseActivity() {
+class NetSpeedAniActivity : NetPseedBase() {
 
     companion object {
         const val STEP_0 = 0 //初始状态
         const val STEP_1 = 1 //测延时
         const val STEP_2 = 2 //测下载
         const val STEP_3 = 3//测上传
-        const val STEP_4 = 4
+        const val STEP_4 = 4 //全部结束
     }
 
     var curStep = STEP_0
     var requeNet: DownloadRequest? = null
-    val defaultValue by lazy {
-        getString(R.string.default_value)
-    }
+
     var curSpeed = 0L
     val gapTime = 2 * 1000L
     var endCound = false
@@ -66,15 +66,26 @@ class NetSpeedAniActivity : BaseActivity() {
     override fun loadData(savedInstanceState: Bundle?) {
 
     }
+
+
+
+
     //测试延时
-    private fun testPing()
-    {
+    private fun testPing() {
         setStep(STEP_1)
         Thread(Runnable {
-            DeviceScanNetworkUtil.ping(Constants.testPingUrl,"3")
+            val res = DeviceScanNetworkUtil.getPingRTT(Constants.testPingUrl, "3")
+            runOnUiThread {
+                if (curStep == STEP_0)
+                    return@runOnUiThread
+                val resInt=res.toInt()
+                apendSpanText(value1, resInt.toString(), defaultUnit1)
+                testDownload()
+            }
         }).start()
 
     }
+
     override fun onDestroy() {
         super.onDestroy()
         endCountSpeed()
@@ -82,6 +93,8 @@ class NetSpeedAniActivity : BaseActivity() {
             cancel()
         }
     }
+
+
     override fun getLayoutId(): Int {
         return R.layout.activity_netspeed_ani
     }
@@ -106,11 +119,33 @@ class NetSpeedAniActivity : BaseActivity() {
 
             //开始下载测试
             //startTest()
-            testPing()
+            // testPing()
+            val tag = vStartSpeed.tag
+            var text="开始测速"
+            if (tag == null || tag == 0) {
+                vStartSpeed.tag = 1
+                testPing()
+                text="取消测速"
+            } else {
+                vStartSpeed.tag = 0
+                //取消测速
+                setStep(STEP_0)
+                cancelAll()
+                text="开始测速"
+            }
+            vStartSpeed.text=text
         }
     }
 
-    fun aniLoading(img: ImageView, show: Boolean = true) {
+    fun cancelAll() {
+        //取消下载
+        requeNet?.apply {
+            cancel()
+        }
+        //取消上传
+    }
+
+    private fun aniLoading(img: ImageView, show: Boolean = true) {
         val ani = img.background as AnimationDrawable
         if (show)
             ani.start()
@@ -118,41 +153,80 @@ class NetSpeedAniActivity : BaseActivity() {
             ani.stop()
     }
 
-    fun setStep(step: Int) {
+    private fun setStep(step: Int) {
         curStep = step
         when (step) {
             STEP_0 -> {
+                vWifiTip.visibility=View.INVISIBLE
+                value1.visibility = View.VISIBLE
                 value2.visibility = View.VISIBLE
                 value3.visibility = View.VISIBLE
-                value1.text = defaultValue
-                value2.text = defaultValue
-                value3.text = defaultValue
+                apendSpanText(value1, defaultValue1, defaultUnit1)
+                apendSpanText(value2, defaultValue1, defaultUnit2)
+                apendSpanText(value3, defaultValue1, defaultUnit2)
+
+                vLoadAni0.visibility = View.GONE
                 vLoadAni1.visibility = View.GONE
                 vLoadAni2.visibility = View.GONE
                 aniLoading(vLoadAni1, false)
                 aniLoading(vLoadAni2, false)
+                aniLoading(vLoadAni0, false)
+            }
+            STEP_1 -> {
+                vWifiTip.visibility=View.VISIBLE
+                value1.visibility = View.GONE
+                value2.visibility = View.VISIBLE
+                value3.visibility = View.VISIBLE
+                apendSpanText(value2, defaultValue1, defaultUnit2)
+                apendSpanText(value3, defaultValue1, defaultUnit2)
+                vLoadAni0.visibility = View.VISIBLE
+                vLoadAni1.visibility = View.GONE
+                vLoadAni2.visibility = View.GONE
+                aniLoading(vLoadAni0, true)
+                aniLoading(vLoadAni1, false)
+                aniLoading(vLoadAni2, false)
+
             }
             STEP_2 -> {
+                value1.visibility = View.VISIBLE
                 value2.visibility = View.GONE
                 value3.visibility = View.VISIBLE
-//                value1.text = defaultValue
-                value2.text = defaultValue
-                value3.text = defaultValue
+
+                apendSpanText(value2, defaultValue1, defaultUnit2)
+                apendSpanText(value3, defaultValue1, defaultUnit2)
                 vLoadAni1.visibility = View.VISIBLE
                 vLoadAni2.visibility = View.GONE
+                vLoadAni0.visibility = View.GONE
                 aniLoading(vLoadAni1)
                 aniLoading(vLoadAni2, false)
+                aniLoading(vLoadAni0, false)
             }
             STEP_3 -> {
+                value1.visibility = View.VISIBLE
                 value2.visibility = View.VISIBLE
                 value3.visibility = View.GONE
                 //  value1.text = defaultValue
                 //  value2.text = defaultValue
-                value3.text = defaultValue
+                apendSpanText(value3, defaultValue1, defaultUnit2)
                 vLoadAni1.visibility = View.GONE
                 vLoadAni2.visibility = View.VISIBLE
+                vLoadAni0.visibility = View.GONE
                 aniLoading(vLoadAni2)
                 aniLoading(vLoadAni1, false)
+                aniLoading(vLoadAni0, false)
+            }
+            STEP_4 -> {
+                value1.visibility = View.VISIBLE
+                value2.visibility = View.VISIBLE
+                value3.visibility = View.VISIBLE
+                //  value1.text = defaultValue
+                //  value2.text = defaultValue
+                vLoadAni1.visibility = View.GONE
+                vLoadAni2.visibility = View.GONE
+                vLoadAni0.visibility = View.GONE
+                aniLoading(vLoadAni2, false)
+                aniLoading(vLoadAni1, false)
+                aniLoading(vLoadAni0, false)
             }
 
         }
@@ -160,11 +234,11 @@ class NetSpeedAniActivity : BaseActivity() {
 
     }
 
-    fun startTest() {
+    fun testDownload() {
         requeNet?.apply {
             cancel()
         }
-        setStep(STEP_1)
+        setStep(STEP_2)
         requeNet = NetRequestUtil.downloadRequest()
         requeNet?.cancelSign = this
         Download.getInstance().download(0, requeNet, object : DownloadCallback(this) {

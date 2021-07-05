@@ -13,8 +13,16 @@ public class SettingPreference implements SharedPreferences.OnSharedPreferenceCh
     //首屏隐私协议
     public static final String KEY_USER_AGREEMENT = "KEY_USER_AGREEMENT";
 
+    //信号增强 储存时间
+    public static final String KET_SIGNAL_TIME = "KET_SIGNAL_TIME";
+
+    //信号增强 储存结果
+    public static final String KET_SIGNAL_STREHGTH = "KET_SIGNAL_STREHGTH";
+
 
     public boolean isAgreement;
+    public long singnalTime;
+    public int singnalValue;
 
     private static SettingPreference mUserPres;
 
@@ -27,7 +35,7 @@ public class SettingPreference implements SharedPreferences.OnSharedPreferenceCh
 
         if (mUserPres == null) {
             mUserPres = new SettingPreference();
-           // mEditor = getSharedPreferences().edit();
+            // mEditor = getSharedPreferences().edit();
         }
         return mUserPres;
     }
@@ -35,6 +43,8 @@ public class SettingPreference implements SharedPreferences.OnSharedPreferenceCh
     private void loadPrefs(SharedPreferences prefs) {
 
         this.isAgreement = prefs.getBoolean(KEY_USER_AGREEMENT, true);
+        this.singnalTime=prefs.getLong(KET_SIGNAL_TIME,0);
+        this.singnalValue=prefs.getInt(KET_SIGNAL_STREHGTH,-1);
 
     }
 

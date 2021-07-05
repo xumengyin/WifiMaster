@@ -206,6 +206,7 @@ class WifiFragment : BaseNativeAdFragment() {
                 startActivity(Intent(activity,NetSpeedAniActivity::class.java))
             }
             WifiPanelMenu.TYPE_CHECK -> {
+                startActivity(Intent(activity,DetectiveAniActivity::class.java))
 
             }
             WifiPanelMenu.TYPE_FORGET_NET -> {
