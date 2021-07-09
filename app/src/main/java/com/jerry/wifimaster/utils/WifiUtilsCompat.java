@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
-import android.net.MacAddress;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
@@ -13,19 +12,10 @@ import android.net.NetworkSpecifier;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiNetworkSpecifier;
 import android.net.wifi.WifiNetworkSuggestion;
-import android.os.PatternMatcher;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.jerry.baselib.utils.LogUtils;
-import com.thanosfisherman.wifiutils.WifiConnectorBuilder;
-import com.thanosfisherman.wifiutils.WifiUtils;
-import com.thanosfisherman.wifiutils.wifiConnect.ConnectionScanResultsListener;
-import com.thanosfisherman.wifiutils.wifiDisconnect.DisconnectionSuccessListener;
-import com.thanosfisherman.wifiutils.wifiRemove.RemoveSuccessListener;
-import com.thanosfisherman.wifiutils.wifiScan.ScanResultsListener;
-import com.thanosfisherman.wifiutils.wifiState.WifiStateListener;
 
 import java.util.ArrayList;
 import java.util.List;

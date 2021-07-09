@@ -63,10 +63,11 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.qmuiteam:qmui:2.0.0-alpha10'
-    implementation 'com.thanosfisherman.wifiutils:wifiutils:1.6.5'
+    //implementation 'com.thanosfisherman.wifiutils:wifiutils:1.6.5'
     implementation 'com.github.tbruyelle:rxpermissions:0.12'
     implementation "io.reactivex.rxjava3:rxjava:3.0.12"
     implementation 'com.blankj:utilcodex:1.30.6'
+    implementation 'com.thanosfisherman.elvis:elvis:3.0'
 
 
 //    implementation 'com.dinuscxj:recycleritemdecoration:1.0.0'

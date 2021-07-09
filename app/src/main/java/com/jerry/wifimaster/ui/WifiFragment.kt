@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.NetworkUtils
 import com.jerry.baselib.utils.LogUtils
 import com.jerry.baselib.utils.ToastUtil
@@ -29,14 +30,12 @@ import com.jerry.wifimaster.ui.dialog.BottomPanel
 import com.jerry.wifimaster.utils.CommonUtils
 import com.jerry.wifimaster.utils.DeviceScanNetworkUtil
 import com.jerry.wifimaster.utils.LocationUtils
-import com.jerry.wifimaster.utils.WifiUtilsCompat
+import com.jerry.wifimaster.wifiutils.WifiUtils
+import com.jerry.wifimaster.wifiutils.wifiConnect.ConnectionErrorCode
+import com.jerry.wifimaster.wifiutils.wifiConnect.ConnectionSuccessListener
+import com.jerry.wifimaster.wifiutils.wifiRemove.RemoveErrorCode
+import com.jerry.wifimaster.wifiutils.wifiRemove.RemoveSuccessListener
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
-import com.thanosfisherman.wifiutils.ConnectorUtils
-import com.thanosfisherman.wifiutils.WifiUtils
-import com.thanosfisherman.wifiutils.wifiConnect.ConnectionErrorCode
-import com.thanosfisherman.wifiutils.wifiConnect.ConnectionSuccessListener
-import com.thanosfisherman.wifiutils.wifiRemove.RemoveErrorCode
-import com.thanosfisherman.wifiutils.wifiRemove.RemoveSuccessListener
 import kotlinx.android.synthetic.main.wifi_fragment.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -56,8 +55,9 @@ class WifiFragment : BaseNativeAdFragment() {
         menuAdapter.notifyItemChanged(0)
 
     })
+    var isConnectWifiOrDisConnect = false
+    var scanWifiTime: Long = 0
 
-    var scanWifiTime:Long=0
     //    initMenuData()
 //    scanWifi()
     val connectReceiverCallBack = object : ConnectReceiver.IConnectRec {
@@ -66,7 +66,7 @@ class WifiFragment : BaseNativeAdFragment() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 initMenuData()
                 if (LocationUtils.isLocationEnabled()) {
-                   // scanWifi()
+                    // scanWifi()
                 } else {
                     //
                     // ToastUtil.toast(activity,"定位 未启动")
@@ -81,7 +81,7 @@ class WifiFragment : BaseNativeAdFragment() {
                 }
             } else {
                 initMenuData()
-               // scanWifi()
+                // scanWifi()
             }
             uodateScanWifis()
         }
@@ -94,29 +94,27 @@ class WifiFragment : BaseNativeAdFragment() {
 
     }
 
-    private fun uodateScanWifis()
-    {
-        val newDatas=mutableListOf<WifiBean>()
+    private fun uodateScanWifis() {
+        val newDatas = mutableListOf<WifiBean>()
         //Collections.copy(newDatas,wifisAdapter.data)
         newDatas.addAll(wifisAdapter.data)
-        if(newDatas.isNotEmpty())
-        {
-            val wifiName=NetworkUtils.getSSID()
+        if (newDatas.isNotEmpty()) {
+            val wifiName = NetworkUtils.getSSID()
             wifisAdapter.setCurWifi(wifiName)
             newDatas.sort()
-            if(wifiName.isNotEmpty())
-            {
-               val fintItem= newDatas.find {
-                    it.result.SSID==wifiName
+            if (wifiName.isNotEmpty()) {
+                val fintItem = newDatas.find {
+                    it.result.SSID == wifiName
                 }
                 fintItem?.apply {
                     newDatas.remove(this)
-                    newDatas.add(0,this)
+                    newDatas.add(0, this)
                 }
             }
             wifisAdapter.setList(newDatas)
         }
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public fun onMessageEvent(speedEvent: SpeedTestEvent) {
         //更新网速
@@ -132,7 +130,7 @@ class WifiFragment : BaseNativeAdFragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == CommonUtils.GPS_KEY) {
             initMenuData()
-           // scanWifi()
+            // scanWifi()
         }
     }
 
@@ -141,32 +139,32 @@ class WifiFragment : BaseNativeAdFragment() {
         netSpeedHelper.stop()
         cancelTimer()
     }
-    var timer:Timer?=null
-    var timerTask:TimerTask?=null
-    val mainHandler=Handler(Looper.getMainLooper())
+
+    var timer: Timer? = null
+    var timerTask: TimerTask? = null
+    val mainHandler = Handler(Looper.getMainLooper())
+
     //2分钟只能扫描4次
-    private fun timerScan()
-    {
+    private fun timerScan() {
         cancelTimer()
-        timer =Timer()
-        timerTask=object : TimerTask() {
+        timer = Timer()
+        timerTask = object : TimerTask() {
             override fun run() {
-                if(System.currentTimeMillis()-scanWifiTime>Constants.SCAN_WIFI_GAP)
-                {
+                if (System.currentTimeMillis() - scanWifiTime > Constants.SCAN_WIFI_GAP) {
                     mainHandler.post {
                         scanWifi()
                     }
                 }
             }
         }
-        timer?.schedule(timerTask,1000,Constants.SCAN_WIFI_GAP)
+        timer?.schedule(timerTask, 1000, Constants.SCAN_WIFI_GAP)
     }
 
-    private fun cancelTimer()
-    {
+    private fun cancelTimer() {
         timer?.cancel()
         timerTask?.cancel()
     }
+
     override fun onResume() {
         super.onResume()
         netSpeedHelper.start()
@@ -279,15 +277,16 @@ class WifiFragment : BaseNativeAdFragment() {
             WifiPanelMenu.TYPE_PASS_CONNECT -> {
                 //WifiUtils.withContext(MainApplication.getInstance()).
 
-                val dialog = BaseAlertDialog.createPasswordDialog(activity, wifiInfo.result.SSID)
-                dialog.setNegativeButtonListener {
-                    dialog.dismiss()
-                }
-                dialog.setPositiveButton("连接")
-                dialog.setPositiveButtonListener {
-                    if (DeviceScanNetworkUtil.isWifiNeedPass(wifiInfo.result)) {
+                if (DeviceScanNetworkUtil.isWifiNeedPass(wifiInfo.result)) {
+                    val dialog =
+                        BaseAlertDialog.createPasswordDialog(activity, wifiInfo.result.SSID)
+                    dialog.setNegativeButtonListener {
+                        dialog.dismiss()
+                    }
+                    dialog.setPositiveButton("连接")
+                    dialog.setPositiveButtonListener {
                         val editText = dialog.customView.findViewById<EditText>(R.id.passEdit)
-                       // ConnectorUtils.con
+                        // ConnectorUtils.con
                         val text = editText.text.toString()
                         if (text.isNullOrEmpty()) {
                             ToastUtil.toast(MainApplication.getInstance(), "请输入密码")
@@ -296,16 +295,18 @@ class WifiFragment : BaseNativeAdFragment() {
 //                            val wifiUtilsCompat=WifiUtilsCompat(requireContext())
 //                            wifiUtilsCompat.connectWifiP2p(requireContext(),wifiInfo.result.SSID,text)
 
-
+                            isConnectWifiOrDisConnect = true
                             WifiUtils.withContext(MainApplication.getInstance())
-                                .connectWith(wifiInfo.result.SSID, wifiInfo.result.BSSID, text)
-                                .setTimeout(15000)
+                                .connectWithSingleScan(text, wifiInfo.result)
+                                //.connectWith(wifiInfo.result.SSID, wifiInfo.result.BSSID, text)
                                 .onConnectionResult(object : ConnectionSuccessListener {
                                     override fun failed(errorCode: ConnectionErrorCode) {
                                         ToastUtil.toast(MainApplication.getInstance(), "连接失败")
+                                        isConnectWifiOrDisConnect = false
                                     }
 
                                     override fun success() {
+                                        isConnectWifiOrDisConnect = false
                                         ToastUtil.toast(
                                             MainApplication.getInstance(),
                                             "wifi连接成功",
@@ -313,30 +314,38 @@ class WifiFragment : BaseNativeAdFragment() {
                                         )
                                     }
 
-                                }).start()
+                                }).startConnect()
+
+
+                            KeyboardUtils.hideSoftInput(editText)
+                            dialog.dismiss()
+
                         }
-                    } else {
-                        //不需要密码 直接连接
-                        WifiUtils.withContext(MainApplication.getInstance())
-                            .connectWith(wifiInfo.result.SSID, wifiInfo.result.BSSID, "")
-                            .onConnectionResult(object : ConnectionSuccessListener {
-                                override fun failed(errorCode: ConnectionErrorCode) {
-                                    ToastUtil.toast(MainApplication.getInstance(), "连接失败")
-                                }
 
-                                override fun success() {
-                                    ToastUtil.toast(
-                                        MainApplication.getInstance(),
-                                        "wifi连接成功",
-                                        R.drawable.toast_ok
-                                    )
-                                }
 
-                            }).start()
                     }
+                    dialog.show()
 
+                } else {
+                    //不需要密码 直接连接
+                    WifiUtils.withContext(MainApplication.getInstance())
+                        .connectWith(wifiInfo.result.SSID, wifiInfo.result.BSSID, "")
+                        .onConnectionResult(object : ConnectionSuccessListener {
+                            override fun failed(errorCode: ConnectionErrorCode) {
+                                ToastUtil.toast(MainApplication.getInstance(), "连接失败")
+                            }
+
+                            override fun success() {
+                                ToastUtil.toast(
+                                    MainApplication.getInstance(),
+                                    "wifi连接成功",
+                                    R.drawable.toast_ok
+                                )
+                            }
+
+                        }).start()
                 }
-                dialog.show()
+
             }
             WifiPanelMenu.TYPE_REPORT -> {
                 //报告
@@ -480,28 +489,46 @@ class WifiFragment : BaseNativeAdFragment() {
         }
 
     }
+
     private fun scanWifi() {
+        if (isConnectWifiOrDisConnect) {
+            LogUtils.logd("  正在连接或断开wifi scanWifi 不能执行")
+            return
+        }
+
         LogUtils.logd("scanWifi 执行")
         activity?.apply {
             if (DeviceScanNetworkUtil.getWifiEnabled(this)) {
                 val curSSid = NetworkUtils.getSSID()
                 val dataList = mutableListOf<WifiBean>()
-                var ownWifiBean:WifiBean?=null
+                var ownWifiBean: WifiBean? = null
                 WifiUtils.withContext(MainApplication.getInstance()).scanWifi { it ->
                     LogUtils.logd("scanWifi  finish ${it.size}")
-                    scanWifiTime=System.currentTimeMillis()
+                    scanWifiTime = System.currentTimeMillis()
                     it.forEach {
                         LogUtils.logd("wifi ssid:${it.SSID} ----level:${it.level}")
                         if (!it.SSID.isNullOrEmpty()) {
                             val wifi = WifiBean(it)
-                            if (!dataList.contains(wifi)) {
+                            val oldMan = dataList.find { it2 ->
+                                it2.result.SSID == wifi.result.SSID&&it2.result.level<wifi.result.level
+                            }
+                            if(oldMan==null)
+                            {
                                 if (curSSid.isNotEmpty() && curSSid == it.SSID) {
                                     //dataList.add(0, wifi)
-                                    ownWifiBean=wifi
+                                    if(ownWifiBean==null|| ownWifiBean?.result?.level!! <wifi.result.level)
+                                    {
+                                        ownWifiBean=wifi
+                                    }
                                 } else {
                                     dataList.add(wifi)
                                 }
+                            }else
+                            {
+                                dataList.remove(oldMan)
+                                dataList.add(wifi)
                             }
+
                         }
                     }
 

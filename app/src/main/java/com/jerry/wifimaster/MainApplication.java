@@ -7,7 +7,7 @@ import android.webkit.WebView;
 
 import com.anythink.core.api.ATSDK;
 import com.jerry.baselib.utils.LogUtils;
-import com.thanosfisherman.wifiutils.WifiUtils;
+import com.jerry.wifimaster.wifiutils.WifiUtils;
 import com.yanzhenjie.nohttp.InitializationConfig;
 import com.yanzhenjie.nohttp.Logger;
 import com.yanzhenjie.nohttp.NoHttp;
@@ -61,7 +61,7 @@ public class MainApplication extends Application
         Logger.setDebug(BuildConfig.DEBUG);
         Logger.setTag("xuxu");
         WifiUtils.enableLog(BuildConfig.DEBUG);
-        WifiUtils.forwardLog(new com.thanosfisherman.wifiutils.Logger() {
+        WifiUtils.forwardLog(new com.jerry.wifimaster.wifiutils.Logger() {
             @Override
             public void log(int priority, String tag, String message) {
                 LogUtils.logd("tag:"+tag+"----"+message);
