@@ -23,7 +23,9 @@ public class SinglePlusView extends View {
 
 
     private Rect bitmapRect = new Rect();
+    private Rect bitmapRect2 = new Rect();
     private RectF dstRect = new RectF();
+    private RectF rect2dstRect = new RectF();
     private Paint imgPaint = new Paint();
     private Paint aniPaint = new Paint();
     private float mCenterX, mCenterY; // 圆心坐标
@@ -32,6 +34,7 @@ public class SinglePlusView extends View {
 
     float imgRadius, mRadius, aniRingRadius;
     private float outGap = dp2px(50);
+    private float innerGap = dp2px(20);
 
     public SinglePlusView(Context context) {
         super(context);
@@ -42,13 +45,15 @@ public class SinglePlusView extends View {
         init();
     }
 
-    Bitmap bitmap;
+    Bitmap bitmap,bitmapBg;
 
     private void init() {
         imgPaint.setAntiAlias(true);
         aniPaint.setAntiAlias(true);
         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.signal_circlr_bg);
+        bitmapBg = BitmapFactory.decodeResource(getResources(), R.drawable.singnal_view_bg1);
         bitmapRect.set(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        bitmapRect2.set(0, 0, bitmapBg.getWidth(), bitmapBg.getHeight());
     }
 
     @Override
@@ -58,9 +63,10 @@ public class SinglePlusView extends View {
         int width = resolveSize(dp2px(220), widthMeasureSpec);
 
         mCenterX = mCenterY = getMeasuredWidth() / 2f;
-        setMeasuredDimension(width, width);
+       // setMeasuredDimension(width, width);
         imgRadius = mCenterX - outGap;
         dstRect.set(-imgRadius, -imgRadius, imgRadius, imgRadius);
+        rect2dstRect.set(dstRect.left+innerGap,dstRect.top+innerGap,dstRect.right-innerGap,dstRect.bottom-innerGap);
         minAniRadius = imgRadius;
         maxAniRadius = mCenterX * 2;
         // startAnimate();
@@ -118,11 +124,13 @@ public class SinglePlusView extends View {
 
         canvas.translate(mCenterX, mCenterY);
         canvas.rotate(rotateDegree);
-        aniPaint.setColor(Color.WHITE);
-        aniPaint.setStyle(Paint.Style.FILL);
-        canvas.drawCircle(0, 0, mRadius, aniPaint);
-//        dstRect.set();
+//        aniPaint.setColor(Color.WHITE);
+//        aniPaint.setAlpha(255);
+//        aniPaint.setStyle(Paint.Style.FILL);
+//        canvas.drawCircle(0, 0, mRadius, aniPaint);
+
         canvas.drawBitmap(bitmap, bitmapRect, dstRect, imgPaint);
+        canvas.drawBitmap(bitmapBg, bitmapRect2, rect2dstRect, imgPaint);
 
         canvas.restore();
     }

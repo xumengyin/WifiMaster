@@ -58,39 +58,39 @@ public abstract class BaseNativeAdActivity extends BaseActivity {
             nativeAd.setNativeEventListener(new ATNativeEventExListener() {
                 @Override
                 public void onDeeplinkCallback(ATNativeAdView view, ATAdInfo adInfo, boolean isSuccess) {
-                    Log.i(TAG, "onDeeplinkCallback:" + adInfo.toString() + "--status:" + isSuccess);
+                    LogUtils.d(TAG, "onDeeplinkCallback:" + adInfo.toString() + "--status:" + isSuccess);
                 }
 
                 @Override
                 public void onAdImpressed(ATNativeAdView view, ATAdInfo entity) {
-                    Log.i(TAG, "native ad onAdImpressed:\n" + entity.toString());
+                    LogUtils.d(TAG, "native ad onAdImpressed:\n" + entity.toString());
                 }
 
                 @Override
                 public void onAdClicked(ATNativeAdView view, ATAdInfo entity) {
-                    Log.i(TAG, "native ad onAdClicked:\n" + entity.toString());
+                    LogUtils.d(TAG, "native ad onAdClicked:\n" + entity.toString());
                 }
 
                 @Override
                 public void onAdVideoStart(ATNativeAdView view) {
-                    Log.i(TAG, "native ad onAdVideoStart");
+                    LogUtils.d(TAG, "native ad onAdVideoStart");
                 }
 
                 @Override
                 public void onAdVideoEnd(ATNativeAdView view) {
-                    Log.i(TAG, "native ad onAdVideoEnd");
+                    LogUtils.d(TAG, "native ad onAdVideoEnd");
                 }
 
                 @Override
                 public void onAdVideoProgress(ATNativeAdView view, int progress) {
-                    Log.i(TAG, "native ad onAdVideoProgress:" + progress);
+                    LogUtils.d(TAG, "native ad onAdVideoProgress:" + progress);
                 }
             });
 
             nativeAd.setDislikeCallbackListener(new ATNativeDislikeListener() {
                 @Override
                 public void onAdCloseButtonClick(ATNativeAdView view, ATAdInfo entity) {
-                    Log.i(TAG, "native ad onAdCloseButtonClick");
+                    LogUtils.d(TAG, "native ad onAdCloseButtonClick");
                     if (view.getParent() != null) {
                         ((ViewGroup) view.getParent()).removeView(view);
                         view.removeAllViews();
@@ -103,10 +103,10 @@ public abstract class BaseNativeAdActivity extends BaseActivity {
             try {
                 nativeAd.renderAdView(atNativeAdView, anyThinkRender);
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
 
-            atNativeAdView.addView(mCloseView);
+           // atNativeAdView.addView(mCloseView);
 
             atNativeAdView.setVisibility(View.VISIBLE);
             nativeAd.prepare(atNativeAdView, anyThinkRender.getClickView(), null);
@@ -120,21 +120,21 @@ public abstract class BaseNativeAdActivity extends BaseActivity {
         atNative = new ATNative(this, adIds, new ATNativeNetworkListener() {
             @Override
             public void onNativeAdLoaded() {
-                LogUtils.logi("onNativeAdLoaded");
+                LogUtils.d(TAG,"onNativeAdLoaded");
                 showAds();
             }
 
             @Override
             public void onNativeAdLoadFail(AdError adError) {
-                LogUtils.logi("onNativeAdLoadFail:"+adError.toString());
+                LogUtils.d(TAG,"onNativeAdLoadFail:"+adError.toString());
             }
         });
 
         Map<String, Object> localMap = new HashMap<>();
 
         // since v5.6.4
-        localMap.put(ATAdConst.KEY.AD_WIDTH, getAdsContentView().getWidth());
-        localMap.put(ATAdConst.KEY.AD_HEIGHT, getAdsContentView().getHeight());
+        localMap.put(ATAdConst.KEY.AD_WIDTH, getAdsContentView().getMeasuredWidth());
+        localMap.put(ATAdConst.KEY.AD_HEIGHT, getAdsContentView().getMeasuredHeight());
 
         atNative.setLocalExtra(localMap);
         atNative.makeAdRequest();

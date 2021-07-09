@@ -26,7 +26,7 @@ import java.util.Map;
 
 public abstract class BaseNativeAdFragment extends BaseFragment {
 
-    private static final String TAG = "BaseNativeAdActivity";
+    private static final String TAG = "BaseNativeAdFragment";
 
     NativeDemoRender anyThinkRender;
     ImageView mCloseView;
@@ -52,6 +52,7 @@ public abstract class BaseNativeAdFragment extends BaseFragment {
                 atNativeAdView.removeAllViews();
 
                 if (atNativeAdView.getParent() == null) {
+                    vAdContentView.removeAllViews();
                     vAdContentView.addView(atNativeAdView, new FrameLayout.LayoutParams(getAdsContentView().getWidth(), getAdsContentView().getHeight()));
                 }
             }
@@ -105,16 +106,23 @@ public abstract class BaseNativeAdFragment extends BaseFragment {
             } catch (Exception e) {
 
             }
-
-            atNativeAdView.addView(mCloseView);
+//            if (mCloseView.getParent()!=null) {
+//                ((ViewGroup)mCloseView.getParent()).removeView(mCloseView);
+//            }
+//            atNativeAdView.addView(mCloseView);
 
             atNativeAdView.setVisibility(View.VISIBLE);
+            vAdContentView.setVisibility(View.VISIBLE);
             nativeAd.prepare(atNativeAdView, anyThinkRender.getClickView(), null);
         }
     }
 
     protected abstract void onCloseAds();
     protected void requestAds(String adIds) {
+        if (atNativeAdView!=null) {
+            atNativeAdView.removeAllViews();
+        }
+
         anyThinkRender = new NativeDemoRender(getContext());
         atNativeAdView = new ATNativeAdView(getContext());
        // atNativeAdView.setPadding(get);

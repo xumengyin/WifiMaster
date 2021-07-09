@@ -4,7 +4,7 @@ import android.net.wifi.ScanResult;
 
 import java.util.Objects;
 
-public class WifiBean {
+public class WifiBean implements Comparable<WifiBean>{
 
     public static final int LEVEL_LOW = 0;
     public static final int LEVEL_MIDDLE = 1;
@@ -34,5 +34,10 @@ public class WifiBean {
     @Override
     public int hashCode() {
         return Objects.hash(result, levelStrength);
+    }
+
+    @Override
+    public int compareTo(WifiBean o) {
+        return o.result.level- result.level;
     }
 }

@@ -6,12 +6,13 @@ import java.io.File;
 
 public class Constants {
 
-
-
+    // 扫描wifi的间隔时间
+    public static final long SCAN_WIFI_GAP=40*1000;
 
     //请求地址
     public static final String baseUrl="https://www.baidu.com/";
     public static final String testPingUrl="baidu.com";
+    public static final String testUploadUrl="https://test.cpsdna.com/saasapi/uploadfile";
     //下载地址
     public static final String rootFileLoc= FileUtils.getAppRootPath(MainApplication.getInstance()).getAbsolutePath()+ File.separator+"wifis";
     public static final String downloadUrl= "http://wap.dl.pinyin.sogou.com/wapdl/android/apk/SogouInput_android_v8.18_sweb.apk";

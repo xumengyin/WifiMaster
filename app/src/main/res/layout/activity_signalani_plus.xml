@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_horizontal"
     android:background="@drawable/detect_top_bg"
     android:orientation="vertical"
     tools:context=".ui.DetectActivity">
@@ -25,15 +26,22 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_margin="@dimen/dp_16" />
+            app:layout_constraintBottom_toBottomOf="parent" />
 
+        <View
+            android:id="@+id/holder"
+            android:layout_width="0dp"
+            app:layout_constraintLeft_toLeftOf="@id/vSignalView"
+            app:layout_constraintRight_toRightOf="@id/vSignalView"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            android:layout_height="0dp"/>
         <TextView
             android:id="@+id/vSignalValue"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@id/holder"
             app:layout_constraintBottom_toTopOf="@+id/tip1"
             android:textColor="#3380E9"
             android:textSize="44sp"
@@ -45,7 +53,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/vSignalValue"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/holder"
             android:textColor="#3380E9"
             android:textSize="@dimen/sp_12"
             android:text="Wifi信号增强中"
@@ -53,21 +61,32 @@
             android:layout_height="wrap_content"/>
 
 
+
+        <TextView
+            android:id="@+id/tip2"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/white"
+            android:gravity="center_horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginTop="@dimen/dp_10"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/holder"
+            android:text="运行过程中请勿使用手机,一面中断"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.jerry.wifimaster.ui.views.SignalProgressBar
+            android:id="@+id/vProgress"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="@dimen/dp_70"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_70"
+            app:layout_constraintTop_toBottomOf="@+id/tip2"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_height="@dimen/dp_10"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    <TextView
-        android:textSize="@dimen/sp_14"
-        android:textColor="@color/white"
-        android:text="运行过程中请勿使用手机,一面中断"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    
-    <com.jerry.wifimaster.ui.views.SignalProgressBar
-        android:id="@+id/vProgress"
-        android:layout_width="match_parent"
-        android:layout_marginLeft="@dimen/dp_70"
-        android:layout_marginRight="@dimen/dp_70"
-        android:layout_height="@dimen/dp_10"/>
 
 </LinearLayout>

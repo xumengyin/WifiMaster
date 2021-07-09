@@ -3,14 +3,16 @@ package com.jerry.wifimaster.ui
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.wifi.WifiInfo
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.NetworkUtils
 import com.jerry.baselib.utils.LogUtils
 import com.jerry.baselib.utils.ToastUtil
@@ -18,19 +20,27 @@ import com.jerry.wifimaster.*
 import com.jerry.wifimaster.adapter.MenuAdapter
 import com.jerry.wifimaster.adapter.WifisAdapter
 import com.jerry.wifimaster.bean.Menus
+import com.jerry.wifimaster.bean.SpeedTestEvent
 import com.jerry.wifimaster.bean.WifiBean
 import com.jerry.wifimaster.bean.WifiPanelMenu
+import com.jerry.wifimaster.perference.SettingPreference
 import com.jerry.wifimaster.ui.dialog.BaseAlertDialog
 import com.jerry.wifimaster.ui.dialog.BottomPanel
 import com.jerry.wifimaster.utils.CommonUtils
 import com.jerry.wifimaster.utils.DeviceScanNetworkUtil
+import com.jerry.wifimaster.utils.LocationUtils
+import com.jerry.wifimaster.utils.WifiUtilsCompat
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
+import com.thanosfisherman.wifiutils.ConnectorUtils
 import com.thanosfisherman.wifiutils.WifiUtils
 import com.thanosfisherman.wifiutils.wifiConnect.ConnectionErrorCode
 import com.thanosfisherman.wifiutils.wifiConnect.ConnectionSuccessListener
 import com.thanosfisherman.wifiutils.wifiRemove.RemoveErrorCode
 import com.thanosfisherman.wifiutils.wifiRemove.RemoveSuccessListener
 import kotlinx.android.synthetic.main.wifi_fragment.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
+import java.util.*
 
 class WifiFragment : BaseNativeAdFragment() {
 
@@ -47,37 +57,145 @@ class WifiFragment : BaseNativeAdFragment() {
 
     })
 
-    val connectReceiverCallBack = ConnectReceiver.IConnectRec {
-        initMenuData()
-        scanWifi()
+    var scanWifiTime:Long=0
+    //    initMenuData()
+//    scanWifi()
+    val connectReceiverCallBack = object : ConnectReceiver.IConnectRec {
+        override fun onConnect() {
+            LogUtils.logd("connectReceiverCallBack onConnect")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                initMenuData()
+                if (LocationUtils.isLocationEnabled()) {
+                   // scanWifi()
+                } else {
+                    //
+                    // ToastUtil.toast(activity,"定位 未启动")
+
+                    val dialog =
+                        BaseAlertDialog.createCommonDialog(activity, "提示", "为了获取更精确的数据,请开启GPS权限")
+                    dialog.setPositiveButton("去授权")
+                    dialog.setPositiveButtonListener {
+                        CommonUtils.gotoGpsSetting(this@WifiFragment)
+                    }
+                    dialog.show()
+                }
+            } else {
+                initMenuData()
+               // scanWifi()
+            }
+            uodateScanWifis()
+        }
+
+        override fun onDisConnect() {
+            LogUtils.logd("connectReceiverCallBack onDisConnect")
+            //wifi被关了
+            initMenuData()
+        }
+
+    }
+
+    private fun uodateScanWifis()
+    {
+        val newDatas=mutableListOf<WifiBean>()
+        //Collections.copy(newDatas,wifisAdapter.data)
+        newDatas.addAll(wifisAdapter.data)
+        if(newDatas.isNotEmpty())
+        {
+            val wifiName=NetworkUtils.getSSID()
+            wifisAdapter.setCurWifi(wifiName)
+            newDatas.sort()
+            if(wifiName.isNotEmpty())
+            {
+               val fintItem= newDatas.find {
+                    it.result.SSID==wifiName
+                }
+                fintItem?.apply {
+                    newDatas.remove(this)
+                    newDatas.add(0,this)
+                }
+            }
+            wifisAdapter.setList(newDatas)
+        }
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public fun onMessageEvent(speedEvent: SpeedTestEvent) {
+        //更新网速
+        if (menuAdapter.data[1].type == MenuAdapter.TYPE_NET_SPEED_N || menuAdapter.data[1].type == MenuAdapter.TYPE_NET_SPEED_Y) {
+            menuAdapter.data[1].type = MenuAdapter.TYPE_NET_SPEED_Y
+            menuAdapter.data[1].descValue = speedEvent.speed
+            menuAdapter.notifyItemChanged(1)
+        }
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CommonUtils.GPS_KEY) {
+            initMenuData()
+           // scanWifi()
+        }
     }
 
     override fun onStop() {
         super.onStop()
         netSpeedHelper.stop()
+        cancelTimer()
+    }
+    var timer:Timer?=null
+    var timerTask:TimerTask?=null
+    val mainHandler=Handler(Looper.getMainLooper())
+    //2分钟只能扫描4次
+    private fun timerScan()
+    {
+        cancelTimer()
+        timer =Timer()
+        timerTask=object : TimerTask() {
+            override fun run() {
+                if(System.currentTimeMillis()-scanWifiTime>Constants.SCAN_WIFI_GAP)
+                {
+                    mainHandler.post {
+                        scanWifi()
+                    }
+                }
+            }
+        }
+        timer?.schedule(timerTask,1000,Constants.SCAN_WIFI_GAP)
     }
 
+    private fun cancelTimer()
+    {
+        timer?.cancel()
+        timerTask?.cancel()
+    }
     override fun onResume() {
         super.onResume()
         netSpeedHelper.start()
+        connectReceiver.register()
+        connectReceiver.setCallBack(connectReceiverCallBack)
+        timerScan()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        connectReceiver.unRegister()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        connectReceiver.unRegister()
+
     }
 
     override fun initViews() {
         super.initViews()
         val statusHeight = QMUIDisplayHelper.getStatusBarHeight(context)
         vTopLayout.setPadding(0, statusHeight, 0, 0)
-        connectReceiver.register()
-        connectReceiver.setCallBack(connectReceiverCallBack)
+
         //initMenuData()
         menuAdapter = MenuAdapter(null)
         vMenuRv.apply {
             layoutManager = GridLayoutManager(this@WifiFragment.context, 4)
             adapter = menuAdapter
+            itemAnimator = null
         }
         vWifiRv.apply {
             wifisAdapter = WifisAdapter(mutableListOf())
@@ -103,7 +221,33 @@ class WifiFragment : BaseNativeAdFragment() {
         }
         //菜单点击事件
         menuAdapter.setOnItemClickListener { adapter, view, position ->
+            val data = menuAdapter.data[position]
+            when (data.type) {
+                MenuAdapter.TYPE_SIGNAL_PLUS -> {
+                    //信号增强
 
+                    val gapTime =
+                        System.currentTimeMillis() - SettingPreference.getInstance().singnalTime
+                    val intent: Intent
+                    if (gapTime < 1000 * 60 * 3) {
+                        intent = Intent(activity, SignalPlusActivity::class.java)
+                        intent.putExtra(
+                            Constants.INTENT_KEY,
+                            SettingPreference.getInstance().singnalValue
+                        )
+                    } else {
+                        intent = Intent(activity, SignalPlusAniActivity::class.java)
+                    }
+                    startActivity(intent)
+                }
+                MenuAdapter.TYPE_NET_SPEED_N,
+                MenuAdapter.TYPE_NET_SPEED_Y -> {
+                    //测速
+                    startActivity(Intent(activity, NetSpeedAniActivity::class.java))
+
+                }
+
+            }
 
         }
         wifisAdapter.setOnItemClickListener { adapter, view, position ->
@@ -143,12 +287,19 @@ class WifiFragment : BaseNativeAdFragment() {
                 dialog.setPositiveButtonListener {
                     if (DeviceScanNetworkUtil.isWifiNeedPass(wifiInfo.result)) {
                         val editText = dialog.customView.findViewById<EditText>(R.id.passEdit)
+                       // ConnectorUtils.con
                         val text = editText.text.toString()
                         if (text.isNullOrEmpty()) {
                             ToastUtil.toast(MainApplication.getInstance(), "请输入密码")
                         } else {
+
+//                            val wifiUtilsCompat=WifiUtilsCompat(requireContext())
+//                            wifiUtilsCompat.connectWifiP2p(requireContext(),wifiInfo.result.SSID,text)
+
+
                             WifiUtils.withContext(MainApplication.getInstance())
                                 .connectWith(wifiInfo.result.SSID, wifiInfo.result.BSSID, text)
+                                .setTimeout(15000)
                                 .onConnectionResult(object : ConnectionSuccessListener {
                                     override fun failed(errorCode: ConnectionErrorCode) {
                                         ToastUtil.toast(MainApplication.getInstance(), "连接失败")
@@ -157,7 +308,7 @@ class WifiFragment : BaseNativeAdFragment() {
                                     override fun success() {
                                         ToastUtil.toast(
                                             MainApplication.getInstance(),
-                                            "连接成功",
+                                            "wifi连接成功",
                                             R.drawable.toast_ok
                                         )
                                     }
@@ -176,7 +327,7 @@ class WifiFragment : BaseNativeAdFragment() {
                                 override fun success() {
                                     ToastUtil.toast(
                                         MainApplication.getInstance(),
-                                        "连接成功",
+                                        "wifi连接成功",
                                         R.drawable.toast_ok
                                     )
                                 }
@@ -185,6 +336,7 @@ class WifiFragment : BaseNativeAdFragment() {
                     }
 
                 }
+                dialog.show()
             }
             WifiPanelMenu.TYPE_REPORT -> {
                 //报告
@@ -202,11 +354,12 @@ class WifiFragment : BaseNativeAdFragment() {
 
             }
             WifiPanelMenu.TYPE_TEST_SPEED -> {
-                    //测速度
-                startActivity(Intent(activity,NetSpeedAniActivity::class.java))
+                //测速度
+                startActivity(Intent(activity, NetSpeedAniActivity::class.java))
             }
             WifiPanelMenu.TYPE_CHECK -> {
-                startActivity(Intent(activity,DetectiveAniActivity::class.java))
+                //安全检测
+                startActivity(Intent(activity, DetectiveAniActivity::class.java))
 
             }
             WifiPanelMenu.TYPE_FORGET_NET -> {
@@ -251,8 +404,7 @@ class WifiFragment : BaseNativeAdFragment() {
 
     override fun loadData(savedInstanceState: Bundle?) {
         super.loadData(savedInstanceState)
-        scanWifi()
-        initMenuData()
+
         requestAds(Constants.ADS_XINXILIU)
     }
 
@@ -288,8 +440,9 @@ class WifiFragment : BaseNativeAdFragment() {
                         d = ContextCompat.getDrawable(this, R.drawable.wifi_b1)
                     else
                         d = ContextCompat.getDrawable(this, R.drawable.wifi_b2)
+                    //WifiInfo.LINK_SPEED_UNKNOWN
                     val connectSpeed =
-                        if (netWork.linkSpeed == WifiInfo.LINK_SPEED_UNKNOWN) "未知" else "" + netWork.linkSpeed + WifiInfo.LINK_SPEED_UNITS
+                        if (netWork.linkSpeed == -1) "未知" else "" + netWork.linkSpeed + WifiInfo.LINK_SPEED_UNITS
                     val ip = DeviceScanNetworkUtil.getLocalIp()
                     Menus.menus.forEachIndexed { index, menus ->
                         if (menus.type == MenuAdapter.TYPE_SIGNAL_STREHGTH) {
@@ -327,25 +480,34 @@ class WifiFragment : BaseNativeAdFragment() {
         }
 
     }
-
     private fun scanWifi() {
+        LogUtils.logd("scanWifi 执行")
         activity?.apply {
             if (DeviceScanNetworkUtil.getWifiEnabled(this)) {
                 val curSSid = NetworkUtils.getSSID()
                 val dataList = mutableListOf<WifiBean>()
-                WifiUtils.withContext(this).scanWifi { it ->
+                var ownWifiBean:WifiBean?=null
+                WifiUtils.withContext(MainApplication.getInstance()).scanWifi { it ->
+                    LogUtils.logd("scanWifi  finish ${it.size}")
+                    scanWifiTime=System.currentTimeMillis()
                     it.forEach {
                         LogUtils.logd("wifi ssid:${it.SSID} ----level:${it.level}")
                         if (!it.SSID.isNullOrEmpty()) {
                             val wifi = WifiBean(it)
                             if (!dataList.contains(wifi)) {
                                 if (curSSid.isNotEmpty() && curSSid == it.SSID) {
-                                    dataList.add(0, wifi)
+                                    //dataList.add(0, wifi)
+                                    ownWifiBean=wifi
                                 } else {
                                     dataList.add(wifi)
                                 }
                             }
                         }
+                    }
+
+                    dataList.sort()
+                    ownWifiBean?.apply {
+                        dataList.add(0, this)
                     }
                     wifisAdapter.setList(dataList)
                 }.start()
@@ -353,7 +515,7 @@ class WifiFragment : BaseNativeAdFragment() {
             } else {
 
                 //todo 提示打开wifi
-                ToastUtil.toast(this@WifiFragment.context, "请打开wifi")
+                ToastUtil.toast(this@WifiFragment.context, "请打开wifi开关")
 //                WifiUtils.withContext(this).enableWifi {
 //                    if (it) {
 //                        Logs.d("enableWifi ok")
@@ -369,5 +531,9 @@ class WifiFragment : BaseNativeAdFragment() {
 
     override fun getLayoutId(): Int {
         return R.layout.wifi_fragment
+    }
+
+    override fun isRegisterEventBus(): Boolean {
+        return true
     }
 }

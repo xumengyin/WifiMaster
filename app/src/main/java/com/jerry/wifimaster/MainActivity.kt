@@ -78,6 +78,10 @@ open class MainActivity : BaseActivity() {
                 }
 
                 override fun onTabSelected(index: Int) {
+                    if(index==0)
+                        QMUIStatusBarHelper.setStatusBarDarkMode(this@MainActivity)
+                    else
+                        QMUIStatusBarHelper.setStatusBarLightMode(this@MainActivity)
 
                 }
 

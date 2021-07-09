@@ -3,7 +3,7 @@ package com.jerry.baselib.base;
 import android.os.Bundle;
 
 /**
- * Created by guqian on 2017/7/13.
+ *
  */
 
 public interface BaseViewInterface {
@@ -21,6 +21,8 @@ public interface BaseViewInterface {
     void loadData(Bundle savedInstanceState);
 
 
+    //是否注册eventbus
+    boolean isRegisterEventBus();
 //    void showLoading();
 //
 //    void showSuccess();

@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
@@ -27,6 +28,8 @@ import com.jerry.baselib.http.CallServer;
 import com.jerry.baselib.http.HttpCallback;
 import com.jerry.baselib.utils.Configs;
 import com.jerry.baselib.utils.LogUtils;
+import com.qmuiteam.qmui.util.QMUIDisplayHelper;
+import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -43,9 +46,9 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
     protected List<ImageView> imageViews = new ArrayList<>();
 
     protected Activity mContext;
-
+    UINavigationView appBar ;
     protected void setDefaultBack() {
-        UINavigationView appBar = (UINavigationView) findViewById(R.id.uinv);
+        appBar = findViewById(R.id.uinv);
         if (appBar != null) {
             appBar.setNavigationBack(R.drawable.ui_ic_back, new View.OnClickListener() {
                 @Override
@@ -54,6 +57,29 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
                 }
             });
         }
+    }
+
+    public void setAppBarTitle(String title)
+    {
+        if(appBar!=null)
+            appBar.setNavigationTitle(title);
+    }
+    protected void setDefaultStatusBar()
+    {
+        QMUIStatusBarHelper.translucent(this);
+        int statusHeight = QMUIDisplayHelper.getStatusBarHeight(this);
+
+        UINavigationView appBar = (UINavigationView) findViewById(R.id.uinv);
+        if(appBar!=null)
+        {
+           ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) appBar.getLayoutParams();
+            params.topMargin=statusHeight;
+            appBar.setLayoutParams(params);
+        }
+    }
+    @Override
+    public boolean isRegisterEventBus() {
+        return false;
     }
 
     /**

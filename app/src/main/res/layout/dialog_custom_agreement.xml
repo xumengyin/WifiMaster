@@ -36,7 +36,7 @@
                 android:textColor="@color/text_content_color1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="我们根据最新的法律，向您说明熊猫走步的隐私政策，特向您推送本提示。请您阅读并充分理解相关条款。"
+                android:text="我们根据最新的法律，向您说明wifi管理大师的隐私政策，特向您推送本提示。请您阅读并充分理解相关条款。"
                 android:textSize="@dimen/sp_12" />
 
             <TextView

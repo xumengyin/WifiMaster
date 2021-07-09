@@ -11,7 +11,7 @@ public class FragmentTabAdapter extends FragmentPagerAdapter {
     protected List<Fragment> mFragments;
 
     public FragmentTabAdapter(FragmentManager fm, List<Fragment> fragments) {
-        super(fm);
+        super(fm,FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.mFragments = fragments;
     }
 

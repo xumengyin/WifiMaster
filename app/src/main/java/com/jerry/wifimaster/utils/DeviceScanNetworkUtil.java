@@ -165,24 +165,27 @@ public class DeviceScanNetworkUtil {
      * 获取设备的ip地址
      */
     public static String getLocalIp() {
-        String localIp = null;
+        String localIp = "";
 
         try {
             Enumeration<NetworkInterface> en
                     = NetworkInterface.getNetworkInterfaces();
-            while (en.hasMoreElements()) {
-                NetworkInterface networkInterface = en.nextElement();
-                Enumeration<InetAddress> inetAddresses
-                        = networkInterface.getInetAddresses();
-                while (inetAddresses.hasMoreElements()) {
-                    InetAddress inetAddress = inetAddresses.nextElement();
-                    if (!inetAddress.isLoopbackAddress() &&
-                            inetAddress instanceof Inet4Address) {
-                        localIp = inetAddress.getHostAddress();
+            if(en!=null)
+            {
+                while (en.hasMoreElements()) {
+                    NetworkInterface networkInterface = en.nextElement();
+                    Enumeration<InetAddress> inetAddresses
+                            = networkInterface.getInetAddresses();
+                    while (inetAddresses.hasMoreElements()) {
+                        InetAddress inetAddress = inetAddresses.nextElement();
+                        if (!inetAddress.isLoopbackAddress() &&
+                                inetAddress instanceof Inet4Address) {
+                            localIp = inetAddress.getHostAddress();
+                        }
                     }
                 }
             }
-        } catch (SocketException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         Log.d(tag, "local ip = " + localIp);

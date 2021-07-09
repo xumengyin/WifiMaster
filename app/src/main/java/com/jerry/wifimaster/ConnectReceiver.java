@@ -6,19 +6,31 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 
+import com.blankj.utilcode.util.NetworkUtils;
 import com.jerry.baselib.utils.LogUtils;
 
 public class ConnectReceiver extends BroadcastReceiver {
     Context context;
     IConnectRec callBack;
+
+    NetworkUtils.NetworkType currentType;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
-            LogUtils.logd("ConnectReceiver----"+intent.getExtras().toString());
-            if(callBack!=null)
-            {
-                callBack.onConnect();
+            LogUtils.logd("ConnectReceiver----" + intent.getExtras().toString());
+
+            // NetworkUtils.NetworkType curNet=NetworkUtils.getNetworkType();
+            if (callBack != null) {
+
+                if (NetworkUtils.getWifiEnabled()) {
+                    callBack.onConnect();
+                } else {
+                    callBack.onDisConnect();
+                }
             }
+
+
         }
     }
 
@@ -31,6 +43,7 @@ public class ConnectReceiver extends BroadcastReceiver {
     }
 
     public void register() {
+        currentType = NetworkUtils.getNetworkType();
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         context.registerReceiver(this, intentFilter);
     }
@@ -41,5 +54,7 @@ public class ConnectReceiver extends BroadcastReceiver {
 
     public interface IConnectRec {
         void onConnect();
+
+        void onDisConnect();
     }
 }

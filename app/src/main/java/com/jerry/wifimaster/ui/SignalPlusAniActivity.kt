@@ -40,7 +40,7 @@ class SignalPlusAniActivity : BaseActivity() {
 
 
     override fun loadData(savedInstanceState: Bundle?) {
-
+            start()
     }
 
     var animate: ValueAnimator? = null
@@ -68,6 +68,7 @@ class SignalPlusAniActivity : BaseActivity() {
                 val intent=Intent(this@SignalPlusAniActivity,SignalPlusActivity::class.java)
                 intent.putExtra(Constants.INTENT_KEY,upgrade)
                 startActivity(intent)
+                finish()
             }
         })
         animate?.addUpdateListener {
@@ -81,6 +82,7 @@ class SignalPlusAniActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        animate?.cancel()
 
     }
     override fun initViews() {

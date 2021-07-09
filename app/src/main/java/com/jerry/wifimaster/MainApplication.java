@@ -6,9 +6,11 @@ import android.os.Build;
 import android.webkit.WebView;
 
 import com.anythink.core.api.ATSDK;
+import com.jerry.baselib.utils.LogUtils;
+import com.thanosfisherman.wifiutils.WifiUtils;
 import com.yanzhenjie.nohttp.InitializationConfig;
+import com.yanzhenjie.nohttp.Logger;
 import com.yanzhenjie.nohttp.NoHttp;
-import com.yanzhenjie.nohttp.OkHttpNetworkExecutor;
 
 
 /**
@@ -53,9 +55,18 @@ public class MainApplication extends Application
         InitializationConfig config = InitializationConfig.newBuilder(this)
                 .connectionTimeout(30 * 1000)
                 .readTimeout(30 * 1000)
-                .networkExecutor(new OkHttpNetworkExecutor())
+                //.networkExecutor(new OkHttpNetworkExecutor())
                 .build();
         NoHttp.initialize(config);
+        Logger.setDebug(BuildConfig.DEBUG);
+        Logger.setTag("xuxu");
+        WifiUtils.enableLog(BuildConfig.DEBUG);
+        WifiUtils.forwardLog(new com.thanosfisherman.wifiutils.Logger() {
+            @Override
+            public void log(int priority, String tag, String message) {
+                LogUtils.logd("tag:"+tag+"----"+message);
+            }
+        });
     }
 
     public static MainApplication getInstance()

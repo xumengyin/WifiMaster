@@ -169,6 +169,7 @@
         android:layout_marginTop="@dimen/dp_44"
         android:background="#80ffffff"
         android:text="开始测速"
+        android:tag="0"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_14"
         app:qmui_radius="20dp" />

@@ -1,6 +1,13 @@
 package com.jerry.wifimaster.utils;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
+import android.provider.Settings;
+
+import androidx.fragment.app.Fragment;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class CommonUtils {
 
@@ -42,5 +49,28 @@ public class CommonUtils {
         }
         return model;
     }
+    public static final int GPS_KEY=998;
+    public static void gotoGpsSetting(Activity activity)
+    {
+        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        activity.startActivityForResult(intent,GPS_KEY);
+    }
+    public static void gotoGpsSetting(Fragment fragment)
+    {
+        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        fragment.startActivityForResult(intent,GPS_KEY);
+    }
 
+
+
+    public static void eventBusPostMsg(Object object)
+    {
+        EventBus.getDefault().post(object);
+    }
+
+
+
+    public static boolean isAndroidQOrLater() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
+    }
 }

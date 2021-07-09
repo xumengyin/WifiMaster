@@ -2,7 +2,14 @@
 <EditText xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/passEdit"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/dp_44"
+    android:layout_height="wrap_content"
+    android:textSize="@dimen/sp_14"
+    android:hint="请输入密码"
+    android:paddingLeft="@dimen/dp_10"
+    android:paddingBottom="@dimen/dp_12"
+    android:paddingTop="@dimen/dp_12"
+    android:maxLength="30"
+    android:paddingRight="@dimen/dp_12"
     android:background="@drawable/edit_bg_shape">
 
 </EditText>

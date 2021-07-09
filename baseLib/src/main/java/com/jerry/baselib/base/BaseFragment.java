@@ -13,6 +13,8 @@ import com.jerry.baselib.http.AbstractRequest;
 import com.jerry.baselib.http.CallServer;
 import com.jerry.baselib.http.HttpCallback;
 
+import org.greenrobot.eventbus.EventBus;
+
 public abstract class BaseFragment extends Fragment implements BaseViewInterface{
 
 
@@ -40,12 +42,20 @@ public abstract class BaseFragment extends Fragment implements BaseViewInterface
     public void onDestroy() {
         super.onDestroy();
         CallServer.getInstance().cancelBySign(this);
+        if(isRegisterEventBus())
+        {
+            EventBus.getDefault().unregister(this);
+        }
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         loadData(savedInstanceState);
+        if(isRegisterEventBus())
+        {
+            EventBus.getDefault().register(this);
+        }
     }
 
     @Override
@@ -56,5 +66,10 @@ public abstract class BaseFragment extends Fragment implements BaseViewInterface
     @Override
     public void loadData(Bundle savedInstanceState) {
 
+    }
+
+    @Override
+    public boolean isRegisterEventBus() {
+        return false;
     }
 }
