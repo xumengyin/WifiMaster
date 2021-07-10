@@ -46,6 +46,11 @@ android {
             keyPassword 'yxlqaz001'
         }
     }
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
 }
 repositories {
     flatDir {

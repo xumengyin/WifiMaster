@@ -20,6 +20,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
 }
 repositories {
     flatDir {
@@ -27,9 +32,23 @@ repositories {
     }
 }
 dependencies {
-    api fileTree(dir: 'libs', include: ['**/*.aar'])
-    api fileTree(dir: "libs", include: ["*.jar"])
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+//    compile fileTree(dir: 'libs', include: ['**/*.aar'])
+//    compile fileTree(dir: "libs", include: ["*.jar"])
+    compile 'androidx.appcompat:appcompat:1.1.0'
+   // api 'com.android.support:appcompat-v7:28.0.0'
+//    compile files('libs/GDTSDK.unionNormal.4.362.1232.aar')
+//    compile files('libs/anythink_banner.aar')
+//    compile files('libs/anythink_china_core.aar')
+//    compile files('libs/anythink_core.aar')
+//    compile files('libs/anythink_interstitial.aar')
+//    compile files('libs/anythink_native.aar')
+//    compile files('libs/anythink_network_gdt.aar')
+//    compile files('libs/anythink_network_pangle_china.aar')
+//    compile files('libs/anythink_rewardvideo.aar')
+//    compile files('libs/anythink_splash.aar')
+//    compile files('libs/open_ad_sdk_3.6.1.4.aar')
+//    compile files('libs/tramini_sdk.aar')
+     compile fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
 
 
 }
