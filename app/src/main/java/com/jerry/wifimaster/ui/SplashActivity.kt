@@ -27,7 +27,7 @@ class SplashActivity : BaseSplashAdActivity() {
     val ads by lazy {
         ATSplashAd(this@SplashActivity, Constants.ADS_SPLASH, null, this@SplashActivity, 5000)
     }
-
+    var isFromBackground=false
     override fun getLayoutId(): Int {
         return R.layout.activity_splash
     }
@@ -97,12 +97,19 @@ class SplashActivity : BaseSplashAdActivity() {
 
     var hasJump = false
     fun gotoMain() {
-        if (!hasJump) {
-            hasJump = true
-            val intent = Intent(this@SplashActivity, MainActivity::class.java)
-            startActivity(intent)
+        if(isFromBackground)
+        {
             finish()
+        }else
+        {
+            if (!hasJump) {
+                hasJump = true
+                val intent = Intent(this@SplashActivity, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
         }
+
 
     }
 
@@ -131,7 +138,8 @@ class SplashActivity : BaseSplashAdActivity() {
     }
 
     override fun initViews() {
-        intent.getBooleanExtra(Constants.INTENT_KEY, false).apply {
+        isFromBackground=intent.getBooleanExtra(Constants.INTENT_KEY, false)
+        isFromBackground.apply {
 
             if (!this) {
                 //首页进入
