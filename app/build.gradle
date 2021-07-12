@@ -2,6 +2,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
+def buildTime() {
+    def date = new Date()
+    def formattedDate = date.format('yyyyMMdd_HHmmss')
+    return formattedDate
+}
 android {
     compileSdkVersion 30
     buildToolsVersion "29.0.3"
@@ -37,6 +42,15 @@ android {
             storePassword 'yxlqaz001'
             keyAlias 'makestep'
             keyPassword 'yxlqaz001'
+            applicationVariants.all { variant ->
+                variant.outputs.all {
+                    if (outputFileName.endsWith('.apk')) {
+                        def apkName = "wifiMaster_${buildTime()}.apk"
+                        //这里使用之前定义apk文件名称
+                        outputFileName = apkName
+                    }
+                }
+            }
         }
 
         release {
@@ -44,6 +58,15 @@ android {
             storePassword 'yxlqaz001'
             keyAlias 'makestep'
             keyPassword 'yxlqaz001'
+            applicationVariants.all { variant ->
+                variant.outputs.all {
+                    if (outputFileName.endsWith('.apk')) {
+                        def apkName = "wifiMaster_${buildTime()}.apk"
+                        //这里使用之前定义apk文件名称
+                        outputFileName = apkName
+                    }
+                }
+            }
         }
     }
     repositories {
