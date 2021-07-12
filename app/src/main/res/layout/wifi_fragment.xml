@@ -65,7 +65,9 @@
         </LinearLayout>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/vMainAd"
-            android:layout_margin="@dimen/dp_16"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_marginRight="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_16"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -87,6 +89,7 @@
             android:id="@+id/vWifiRv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_16"
             android:layout_marginLeft="@dimen/dp_16"
             android:layout_marginRight="@dimen/dp_16"
             android:background="@drawable/white_radius" />

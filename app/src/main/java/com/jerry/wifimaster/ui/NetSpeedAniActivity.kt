@@ -153,14 +153,15 @@ class NetSpeedAniActivity : NetPseedBase() {
         val uploadRequest= EntityRequest(Constants.testUploadUrl, RequestMethod.POST, FormUpload::class.java)
         val params = mutableMapOf<String, Any>()
 
-//        params.put("name","file")
-//        params.put("cmd","uploadfile")
-//        params.put("dir","vmaster")
+        params.put("name","file")
+        params.put("cmd","uploadfile")
+        params.put("dir","vmaster")
         uploadRequest
             .add(params)
             //.add("age", 18)
             .add("file", vUploadBinary)
        // uploadRequest.setcon("content-type","multipart/form-data")
+       // uploadRequest.contentType = "multipart/form-data"
         request(uploadRequest,false) {
             if (it.isSucceed) {
 

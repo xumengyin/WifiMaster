@@ -46,6 +46,7 @@ public class NetSpeedHelper {
 
     public void start()
     {
+        stop();
         totalByte = TrafficStats.getTotalRxBytes();
         handler.sendMessageDelayed(handler.obtainMessage(),GAP*1000);
         isStart=true;

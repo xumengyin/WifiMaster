@@ -34,5 +34,12 @@ public class Constants {
     public static final String ADS_XINXILIU="b60dc180aa8376";
 
 
+    /**
+     * umeng
+     */
+    public static final String UMENG_APPKEY="60d978078a102159db7e4f7c";
+
+
+
 
 }

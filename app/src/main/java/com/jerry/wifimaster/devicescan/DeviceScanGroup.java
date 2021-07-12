@@ -1,12 +1,18 @@
 package com.jerry.wifimaster.devicescan;
 
 
+import android.os.Build;
 import android.util.Log;
+
+import com.jerry.baselib.utils.LogUtils;
+import com.jerry.wifimaster.utils.CommonUtils;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -60,7 +66,13 @@ public class DeviceScanGroup implements Runnable
     @Override
     public void run()
     {
-        getIpMacFromFile();
+        if(CommonUtils.isAndroidQOrLater())
+        {
+            getIpMacFromArpCmd();
+        }else
+        {
+            getIpMacFromFile();
+        }
         Log.d(tag, "device scan group: " + mGroupIndex + " find " + mIpMacList.size()
             + " IP_MAC");
 
@@ -92,6 +104,79 @@ public class DeviceScanGroup implements Runnable
             }
         }
     }
+
+    private void getIpMacFromArpCmd()
+    {
+            // String IP_CMD   ="ip neighbor";
+            String IP_CMD   ="ip neigh show";
+            BufferedReader br = null;
+            try {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    Process ipProc = Runtime.getRuntime().exec(IP_CMD);
+                    ipProc.waitFor();
+                    if (ipProc.exitValue() != 0) {
+                        throw new Exception("Unable to access ARP entries");
+                    }
+
+                    br = new BufferedReader(new InputStreamReader(ipProc.getInputStream(), "UTF-8"));
+                    String line;
+                    while ((line = br.readLine()) != null) {
+
+                        String[] neighborLine = line.split("\\s+");
+                        if (neighborLine.length <= 4) {
+                            continue;
+                        }
+                        String ip = neighborLine[0];
+                        //final String hwAddr = neighborLine[4];
+
+                        InetAddress addr = InetAddress.getByName(ip);
+                        if (addr.isLinkLocalAddress() || addr.isLoopbackAddress()) {
+                            continue;
+                        }
+                        LogUtils.logd("--------------:"+line);
+                        String macAddress = neighborLine[4];
+                        String state = neighborLine[neighborLine.length - 1];
+                        if(!"00:00:00:00:00:00".equalsIgnoreCase(macAddress))
+                        {
+                            IP_MAC ip_mac = new IP_MAC(ip, macAddress.toUpperCase(Locale.US));
+                            int index = mDeviceScanHandler.mIpMacInLan.indexOf(ip_mac);
+                            if (index == -1)
+                            {
+                                mIpMacList.add(ip_mac);
+                                mDeviceScanHandler.mIpMacInLan.add(ip_mac);
+                            }
+                        }
+
+
+
+//                    if (!NEIGHBOR_FAILED.equals(state) && !NEIGHBOR_INCOMPLETE.equals(state)) {
+//                        boolean isReachable = false;
+//                        try {
+//                            isReachable = InetAddress.getByName(ip).isReachable(5000);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                        if (isReachable) {
+//                            result.add(new WifiClient(ip, hwAddr));
+//                        }
+//                    }
+                    }
+                }
+            } catch (Exception e) {
+            } finally {
+                try {
+                    if (br != null) {
+                        br.close();
+                    }
+                } catch (IOException e) {
+                }
+            }
+
+    }
+
+
+
 
     /**
      * 从proc/net/arp中读取ip_mac对

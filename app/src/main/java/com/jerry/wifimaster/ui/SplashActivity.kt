@@ -61,6 +61,7 @@ class SplashActivity : BaseSplashAdActivity() {
             argeementDialog=CustomAgreementDialog(this)
             argeementDialog?.apply {
                 buttonOK.setOnClickListener {
+                    SettingPreference.save(SettingPreference.KEY_USER_AGREEMENT,false)
                     dismiss()
                     init()
                 }
@@ -70,6 +71,9 @@ class SplashActivity : BaseSplashAdActivity() {
                 }
                 show()
             }
+        }else
+        {
+            init()
         }
     }
 

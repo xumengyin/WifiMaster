@@ -8,6 +8,7 @@ import android.webkit.WebView;
 
 import com.jerry.baselib.base.BaseWebViewActivity;
 import com.jerry.baselib.base.UINavigationView;
+import com.jerry.wifimaster.R;
 
 /**
  * Created by guqian on 2017/8/2.
@@ -37,6 +38,12 @@ public class ServiceWebActivity extends BaseWebViewActivity {
         mUinv.setNavigationTitle(mTitle);
 
         mWebView.loadUrl(mUrl);
+    }
+
+    @Override
+    public void initViews() {
+        super.initViews();
+        mUinv=findViewById(R.id.uinv);
     }
 
     @Override

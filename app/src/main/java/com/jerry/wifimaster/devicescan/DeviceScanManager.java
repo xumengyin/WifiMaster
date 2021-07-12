@@ -14,7 +14,7 @@ import java.lang.ref.WeakReference;
 /**
  *.
  */
-public class DeviceScanManager
+public class DeviceScanManager implements IScan
 {
     private static final String tag = DeviceScanManager.class.getSimpleName();
 

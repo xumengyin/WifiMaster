@@ -9,7 +9,7 @@ import com.jerry.wifimaster.devicescan.IP_MAC
 class ScanDevicesAdapter(data: MutableList<IP_MAC>?) :
     BaseQuickAdapter<IP_MAC, BaseViewHolder>(R.layout.device_item_layout, data) {
 
-    var deviceName: String = ""
+    var deviceName: String ?= ""
 
     override fun convert(holder: BaseViewHolder, item: IP_MAC) {
         item.apply {

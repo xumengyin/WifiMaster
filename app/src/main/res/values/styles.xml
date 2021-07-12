@@ -18,4 +18,9 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowBackground">@drawable/bg_splash</item>
     </style>
+    <style name="webTheme" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/white</item>
+        <item name="isLightTheme">true</item>
+    </style>
 </resources>

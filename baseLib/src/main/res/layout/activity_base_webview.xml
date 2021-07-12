@@ -9,7 +9,7 @@
         android:id="@+id/uinv"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_44"
-        android:background="@drawable/base_navi_bg">
+        android:background="@color/colorAccent">
 
     </com.jerry.baselib.base.UINavigationView>
 

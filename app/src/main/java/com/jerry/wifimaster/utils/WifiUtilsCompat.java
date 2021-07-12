@@ -12,13 +12,20 @@ import android.net.NetworkSpecifier;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiNetworkSpecifier;
 import android.net.wifi.WifiNetworkSuggestion;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
 
 import com.jerry.baselib.utils.LogUtils;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class WifiUtilsCompat {
 
@@ -106,4 +113,8 @@ public class WifiUtilsCompat {
         }
 
     }
+
+
+
+
 }

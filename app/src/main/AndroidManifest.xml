@@ -40,7 +40,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
-        <activity android:name=".ui.ServiceWebActivity" />
+        <activity android:name=".ui.ServiceWebActivity"
+            android:theme="@style/webTheme"/>
     </application>
 
 </manifest>

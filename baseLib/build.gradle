@@ -59,4 +59,9 @@ dependencies {
     //api 'com.squareup.okhttp3:okhttp-urlconnection:3.11.0'
     api 'com.google.code.gson:gson:2.7'
     api 'org.greenrobot:eventbus:3.2.0'
+
+
+    api  'com.umeng.umsdk:common:9.4.0'// 必选
+    api  'com.umeng.umsdk:asms:1.2.3'// 必选
+    api 'com.umeng.umsdk:apm:1.4.0' // 错误分析升级为独立SDK，看crash数据请一定集成，可选
 }

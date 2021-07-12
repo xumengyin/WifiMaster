@@ -16,6 +16,8 @@ import com.jerry.baselib.utils.LogUtils;
 import com.jerry.wifimaster.ui.SplashActivity;
 import com.jerry.wifimaster.utils.Constant;
 import com.jerry.wifimaster.wifiutils.WifiUtils;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.commonsdk.UMConfigure;
 import com.yanzhenjie.nohttp.InitializationConfig;
 import com.yanzhenjie.nohttp.Logger;
 import com.yanzhenjie.nohttp.NoHttp;
@@ -102,6 +104,7 @@ public class MainApplication extends Application {
 
 
     private void initThrid() {
+        initUmeng();
         InitializationConfig config = InitializationConfig.newBuilder(this)
                 .connectionTimeout(30 * 1000)
                 .readTimeout(30 * 1000)
@@ -119,6 +122,14 @@ public class MainApplication extends Application {
         });
     }
 
+    private void initUmeng()
+    {
+        UMConfigure.init(this,Constants.UMENG_APPKEY,"UMENG_CHANNEL",UMConfigure.DEVICE_TYPE_PHONE,null);
+        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
+        if (BuildConfig.DEBUG) {
+            UMConfigure.setLogEnabled(true);
+        }
+    }
     public static MainApplication getInstance() {
         return mInstance;
     }
