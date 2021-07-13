@@ -10,9 +10,11 @@ import android.os.Looper
 import android.view.View
 import android.widget.EditText
 import androidx.core.content.ContextCompat
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.NetworkUtils
 import com.jerry.baselib.utils.LogUtils
@@ -30,7 +32,6 @@ import com.jerry.wifimaster.ui.dialog.BottomPanel
 import com.jerry.wifimaster.utils.CommonUtils
 import com.jerry.wifimaster.utils.DeviceScanNetworkUtil
 import com.jerry.wifimaster.utils.LocationUtils
-import com.jerry.wifimaster.utils.WifiUtilsCompat
 import com.jerry.wifimaster.wifiutils.WifiUtils
 import com.jerry.wifimaster.wifiutils.wifiConnect.ConnectionErrorCode
 import com.jerry.wifimaster.wifiutils.wifiConnect.ConnectionSuccessListener
@@ -208,6 +209,11 @@ class WifiFragment : BaseNativeAdFragment() {
             ContextCompat.getDrawable(context, R.drawable.base_divider)
                 ?.let { divider.setDrawable(it) }
             addItemDecoration(divider)
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+
+                }
+            })
         }
         //收起面板
         vPanel.setOnClickListener {
@@ -274,6 +280,12 @@ class WifiFragment : BaseNativeAdFragment() {
             }
 
         }
+//        LogUtils.d("mmm", "recyclerView dy:${dy}")
+        val scrollview=vMainScrollView as NestedScrollView
+       scrollview.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
+           LogUtils.d("mmm", "recyclerView scrollY:${scrollY}---oldScrollY:${oldScrollY}")
+
+       }
     }
 
     private fun dealPanelMenu(menu: WifiPanelMenu, wifiInfo: WifiBean) {
@@ -305,12 +317,18 @@ class WifiFragment : BaseNativeAdFragment() {
                                 //.connectWith(wifiInfo.result.SSID, wifiInfo.result.BSSID, text)
                                 .onConnectionResult(object : ConnectionSuccessListener {
                                     override fun failed(errorCode: ConnectionErrorCode) {
-                                        if(errorCode==ConnectionErrorCode.AUTHENTICATION_ERROR_OCCURRED)
-                                        {
-                                            ToastUtil.toast(MainApplication.getInstance(), "密码错误",R.drawable.toast_wrong)
-                                        }else
-                                        {
-                                            ToastUtil.toast(MainApplication.getInstance(), "连接失败",R.drawable.toast_wrong)
+                                        if (errorCode == ConnectionErrorCode.AUTHENTICATION_ERROR_OCCURRED) {
+                                            ToastUtil.toast(
+                                                MainApplication.getInstance(),
+                                                "密码错误",
+                                                R.drawable.toast_wrong
+                                            )
+                                        } else {
+                                            ToastUtil.toast(
+                                                MainApplication.getInstance(),
+                                                "连接失败",
+                                                R.drawable.toast_wrong
+                                            )
                                         }
 
                                         isConnectWifiOrDisConnect = false
@@ -521,21 +539,18 @@ class WifiFragment : BaseNativeAdFragment() {
                         if (!it.SSID.isNullOrEmpty()) {
                             val wifi = WifiBean(it)
                             val oldMan = dataList.find { it2 ->
-                                it2.result.SSID == wifi.result.SSID&&it2.result.level<wifi.result.level
+                                it2.result.SSID == wifi.result.SSID && it2.result.level < wifi.result.level
                             }
-                            if(oldMan==null)
-                            {
+                            if (oldMan == null) {
                                 if (curSSid.isNotEmpty() && curSSid == it.SSID) {
                                     //dataList.add(0, wifi)
-                                    if(ownWifiBean==null|| ownWifiBean?.result?.level!! <wifi.result.level)
-                                    {
-                                        ownWifiBean=wifi
+                                    if (ownWifiBean == null || ownWifiBean?.result?.level!! < wifi.result.level) {
+                                        ownWifiBean = wifi
                                     }
                                 } else {
                                     dataList.add(wifi)
                                 }
-                            }else
-                            {
+                            } else {
                                 dataList.remove(oldMan)
                                 dataList.add(wifi)
                             }

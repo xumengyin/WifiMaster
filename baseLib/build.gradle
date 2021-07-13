@@ -28,22 +28,23 @@ android {
     dexOptions {
         javaMaxHeapSize "4g"
     }
-    repositories {
-        flatDir {
-            dirs 'libs'
-        }
-    }
 }
 repositories {
     flatDir {
         dirs 'libs'
+        dirs project(':adLibs').file('libs')
     }
 }
 dependencies {
-    api fileTree(include: ['*.jar'], dir: 'libs')
+   // api project(path: ':oaid_sdk_1.0.25')
+    //api fileTree(include: ['*.jar'], dir: 'libs')
+   // api fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
     api project(path: ':adLibs')
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    api files('libs/oaid_sdk_1.0.25.aar')
+    //api files('libs/oaid_sdk_1.0.25.aar')
+
+    //implementation files('libs/oaid_sdk_1.0.25.aar')
+    api(name: 'oaid_sdk_1.0.25', ext: 'aar')
     api 'me.jessyan:autosize:1.2.1'
     implementation 'com.qmuiteam:qmui:2.0.0-alpha10'
     api 'androidx.lifecycle:lifecycle-extensions:2.2.0'
@@ -63,5 +64,6 @@ dependencies {
 
     api  'com.umeng.umsdk:common:9.4.0'// 必选
     api  'com.umeng.umsdk:asms:1.2.3'// 必选
-    api 'com.umeng.umsdk:apm:1.4.0' // 错误分析升级为独立SDK，看crash数据请一定集成，可选
+    api 'com.umeng.umsdk:apm:1.4.0'// 错误分析升级为独立SDK，看crash数据请一定集成，可选
+    //api files('libs/oaid_sdk_1.0.25')
 }
