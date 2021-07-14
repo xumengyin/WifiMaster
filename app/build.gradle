@@ -94,6 +94,7 @@ dependencies {
     implementation 'com.blankj:utilcodex:1.30.6'
     implementation 'com.thanosfisherman.elvis:elvis:3.0'
 
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.5.0'
    // implementation files('../libs/oaid_sdk_1.0.25.aar')
 
 
