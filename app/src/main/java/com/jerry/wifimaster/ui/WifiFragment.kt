@@ -254,6 +254,10 @@ class WifiFragment : BaseNativeAdFragment() {
                     startActivity(Intent(activity, NetSpeedAniActivity::class.java))
 
                 }
+                MenuAdapter.TYPE_TEST->{
+                    //安全检测
+                    startActivity(Intent(activity, DetectiveAniActivity::class.java))
+                }
 
             }
 
@@ -283,7 +287,7 @@ class WifiFragment : BaseNativeAdFragment() {
 //        LogUtils.d("mmm", "recyclerView dy:${dy}")
         val scrollview=vMainScrollView as NestedScrollView
        scrollview.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
-           LogUtils.d("mmm", "recyclerView scrollY:${scrollY}---oldScrollY:${oldScrollY}")
+          // LogUtils.d("mmm", "recyclerView scrollY:${scrollY}---oldScrollY:${oldScrollY}")
 
        }
     }

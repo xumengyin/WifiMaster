@@ -1,17 +1,21 @@
 package com.jerry.wifimaster.ui
 
+import android.animation.Animator
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.animation.Animation
 import androidx.core.content.ContextCompat
+import androidx.core.view.LayoutInflaterCompat
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.jerry.baselib.utils.LogUtils
 import com.jerry.wifimaster.Constants
 import com.jerry.wifimaster.R
 import com.jerry.wifimaster.adapter.ScanDevicesAdapter
@@ -30,6 +34,9 @@ class DetectActivity : BaseNativeAdActivity() {
     val scanAdapter by lazy {
         ScanDevicesAdapter(mutableListOf())
     }
+    val adsHeadView by lazy {
+        LayoutInflater.from(this).inflate(R.layout.ads_head_layout,null,false)
+    }
     var listData = mutableListOf<IP_MAC>()
     override fun getLayoutId(): Int {
         return R.layout.activity_detect
@@ -37,13 +44,14 @@ class DetectActivity : BaseNativeAdActivity() {
 
     override fun getAdsContentView(): View {
         if (vAdContentView == null) {
-            vAdContentView = vAdContent
+            vAdContentView = adsHeadView.findViewById(R.id.vAdContent)
         }
         return vAdContentView
     }
 
     override fun onCloseAds() {
-        vMainAd.visibility = GONE
+        //vMainAd.visibility = GONE
+        scanAdapter.removeAllHeaderView()
     }
 
     override fun loadData(savedInstanceState: Bundle?) {
@@ -68,6 +76,10 @@ class DetectActivity : BaseNativeAdActivity() {
         requestAds(Constants.ADS_XINXILIU)
     }
 
+    fun initHeadView()
+    {
+        scanAdapter.addHeaderView(adsHeadView)
+    }
     var isAni=false
     override fun initViews() {
         super.initViews()
@@ -77,6 +89,8 @@ class DetectActivity : BaseNativeAdActivity() {
         params.topMargin = statusHeight
         uinv.layoutParams = params
         uinv.setNavigationTitle("安全检测")
+
+        initHeadView()
         vCheck.setOnClickListener {
             startActivity(Intent(this@DetectActivity, DetectiveAniActivity::class.java))
         }
@@ -91,62 +105,50 @@ class DetectActivity : BaseNativeAdActivity() {
             addItemDecoration(divider)
 
         }
-        vScrollView.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
-            scrollstate = scrollY - oldScrollY
-            if (scrollstate > 0) {
-                //上滑动，要隐藏
-                if (vBtnLayout.visibility == VISIBLE && (vBtnLayout.animation == null&&!isAni)) {
+
+        vDeviceRv.addOnScrollListener(object :RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                LogUtils.d("mmm", "vScrollView scrollY:${dy}")
+                scrollstate=dy
+                if (scrollstate > 0) {
+//                //上滑动，要隐藏
+                if (!isAni) {
                     isAni=true
-                    val ani=CommonUtils.loadAni(this@DetectActivity,R.anim.bottom_tohide)
-
-                    ani.setAnimationListener(object : Animation.AnimationListener
-                    {
-                        override fun onAnimationStart(animation: Animation?) {
-
-                        }
-
-                        override fun onAnimationEnd(animation: Animation?) {
-                            vBtnLayout.clearAnimation()
-                            vBtnLayout.visibility= GONE
-                            isAni=false
-                        }
-
-                        override fun onAnimationRepeat(animation: Animation?) {
-
-                        }
-
-                    })
-                    vBtnLayout.startAnimation(ani)
-                    //vBtnLayout.ani
+                    vBtnLayout.animate().withEndAction { isAni=false }.translationY(vBtnLayout.measuredHeight+10f).setDuration(400).start()
                 }
             } else if(scrollstate<0){
                 //下滑 要展示
-                if(vBtnLayout.visibility == GONE && (vBtnLayout.animation == null&&!isAni))
+                if(!isAni)
                 {
                     isAni=true
-                    val ani=CommonUtils.loadAni(this@DetectActivity,R.anim.bottom_toshow)
+                    vBtnLayout.animate().withEndAction { isAni=false }.translationY(0f).setDuration(400).start()
 
-                    ani.setAnimationListener(object : Animation.AnimationListener
-                    {
-                        override fun onAnimationStart(animation: Animation?) {
-
-                        }
-
-                        override fun onAnimationEnd(animation: Animation?) {
-                            vBtnLayout.clearAnimation()
-                            vBtnLayout.visibility= VISIBLE
-                            isAni=false
-                        }
-
-                        override fun onAnimationRepeat(animation: Animation?) {
-
-                        }
-
-                    })
-                    vBtnLayout.startAnimation(ani)
                 }
             }
-        }
+            }
+        })
+//        vDeviceRv.setOnScrollChangeListener { v: View?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
+//            LogUtils.d("mmm", "vScrollView scrollY:${scrollY}---oldScrollY:${oldScrollY}")
+//            scrollstate = scrollY - oldScrollY
+//            if (scrollstate > 0) {
+//                //上滑动，要隐藏
+//                if (!isAni) {
+//                  //  vBtnLayout.translationY
+//                    isAni=true
+//                    vBtnLayout.animate().withEndAction { isAni=false }.translationY(vBtnLayout.measuredHeight+10f).setDuration(400).start()
+//                }
+//            } else if(scrollstate<0){
+//                //下滑 要展示
+//                if(!isAni)
+//                {
+//                    isAni=true
+////                    val ani=CommonUtils.loadAni(this@DetectActivity,R.anim.bottom_toshow)
+//                    vBtnLayout.animate().withEndAction { isAni=false }.translationY(0f).setDuration(400).start()
+//
+//                }
+//            }
+//        }
 
     }
 }

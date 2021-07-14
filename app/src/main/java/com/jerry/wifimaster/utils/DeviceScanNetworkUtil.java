@@ -411,7 +411,7 @@ public class DeviceScanNetworkUtil {
                     continue;
                 }
             } catch (IOException e) {
-                Log.e(tag, e.getMessage().toString());
+                Log.e(tag, "scan device:"+e.getMessage());
             }
         }
         return false;

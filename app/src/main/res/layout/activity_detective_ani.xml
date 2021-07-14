@@ -27,7 +27,7 @@
         android:layout_gravity="center_horizontal"
         android:textColor="@color/white"
         android:textSize="14sp"
-        tools:text="扫描中，总共5T爱设备" />
+        android:text="扫描中,同WIFI下有0台设备" />
 
 
     <FrameLayout
@@ -42,8 +42,8 @@
             android:layout_gravity="center"
             android:background="#32ffffff"
             android:gravity="center"
-            android:tag="0"
-            android:text="开始检测"
+            android:tag="1"
+            android:text="取消检测"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_14"
             app:qmui_radius="10dp" />

@@ -43,6 +43,9 @@ class DetectiveAniActivity : BaseActivity() {
     }
     val deviceList= mutableListOf<IP_MAC>()
     override fun loadData(savedInstanceState: Bundle?) {
+        vDetectView.post {
+            startScan()
+        }
     }
 
     override fun getLayoutId(): Int {
@@ -57,7 +60,6 @@ class DetectiveAniActivity : BaseActivity() {
         params.topMargin = statusHeight
         uinv.layoutParams = params
         uinv.setNavigationTitle("安全检测")
-
 
         vCancle.setOnClickListener {
             val title: String
