@@ -50,8 +50,8 @@ class SignalPlusAniActivity : BaseActivity() {
             animate?.cancel()
             animate=null
         }
-        //5-15
-        val upgrade= Random(2021).nextInt(10)+5
+        //5-15 随机数
+        val upgrade= (5..15).random()
         animate=ValueAnimator.ofInt(0,upgrade)
         animate?.addListener(object :AnimatorListenerAdapter()
         {

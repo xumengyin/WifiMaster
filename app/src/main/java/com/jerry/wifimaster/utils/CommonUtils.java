@@ -16,6 +16,7 @@ public class CommonUtils {
 
     /**
      * 加载动画
+     *
      * @param context
      * @param ani
      * @return
@@ -76,5 +77,11 @@ public class CommonUtils {
 
     public static boolean isAndroidQOrLater() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
+    }
+
+    public static void gotoWifiSetting(Context context) {
+        context.startActivity(
+                new Intent(Settings.ACTION_WIFI_SETTINGS)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 }

@@ -92,6 +92,8 @@ class WifiFragment : BaseNativeAdFragment() {
             LogUtils.logd("connectReceiverCallBack onDisConnect")
             //wifi被关了
             initMenuData()
+           // uodateScanWifis()
+            wifisAdapter.setList(mutableListOf())
         }
 
     }
@@ -233,30 +235,42 @@ class WifiFragment : BaseNativeAdFragment() {
             when (data.type) {
                 MenuAdapter.TYPE_SIGNAL_PLUS -> {
                     //信号增强
-
-                    val gapTime =
-                        System.currentTimeMillis() - SettingPreference.getInstance().singnalTime
-                    val intent: Intent
-                    if (gapTime < 1000 * 60 * 3) {
-                        intent = Intent(activity, SignalPlusActivity::class.java)
-                        intent.putExtra(
-                            Constants.INTENT_KEY,
-                            SettingPreference.getInstance().singnalValue
-                        )
-                    } else {
-                        intent = Intent(activity, SignalPlusAniActivity::class.java)
+                    if(checkWifiEnable())
+                    {
+                        val gapTime =
+                            System.currentTimeMillis() - SettingPreference.getInstance().singnalTime
+                        val intent: Intent
+                        if (gapTime < 1000 * 60 * 3) {
+                            intent = Intent(activity, SignalPlusActivity::class.java)
+                            intent.putExtra(
+                                Constants.INTENT_KEY,
+                                SettingPreference.getInstance().singnalValue
+                            )
+                        } else {
+                            intent = Intent(activity, SignalPlusAniActivity::class.java)
+                        }
+                        startActivity(intent)
                     }
-                    startActivity(intent)
+
+
                 }
                 MenuAdapter.TYPE_NET_SPEED_N,
                 MenuAdapter.TYPE_NET_SPEED_Y -> {
                     //测速
-                    startActivity(Intent(activity, NetSpeedAniActivity::class.java))
+                    if(checkWifiEnable())
+                    {
+                        startActivity(Intent(activity, NetSpeedAniActivity::class.java))
+                    }
+
 
                 }
                 MenuAdapter.TYPE_TEST->{
-                    //安全检测
-                    startActivity(Intent(activity, DetectiveAniActivity::class.java))
+                    if(checkWifiEnable())
+                    {
+                        //安全检测
+                        startActivity(Intent(activity, DetectiveAniActivity::class.java))
+                    }
+
                 }
 
             }
@@ -291,8 +305,21 @@ class WifiFragment : BaseNativeAdFragment() {
 
        }
     }
-
+    private fun checkWifiEnable():Boolean
+    {
+        var enable=true
+        if(!NetworkUtils.getWifiEnabled())
+        {
+            ToastUtil.toast(MainApplication.getInstance(),"请先打开WIFI")
+            CommonUtils.gotoWifiSetting(activity)
+            enable=false
+        }
+        return  enable
+    }
     private fun dealPanelMenu(menu: WifiPanelMenu, wifiInfo: WifiBean) {
+
+        if(!checkWifiEnable())
+            return
         when (menu.type) {
             WifiPanelMenu.TYPE_PASS_CONNECT -> {
                 //WifiUtils.withContext(MainApplication.getInstance()).
