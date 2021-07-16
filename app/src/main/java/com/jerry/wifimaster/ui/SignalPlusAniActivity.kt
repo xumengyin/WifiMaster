@@ -48,6 +48,7 @@ class SignalPlusAniActivity : BaseActivity() {
     {
         if (animate!=null) {
             animate?.cancel()
+            animate?.removeAllListeners()
             animate=null
         }
         //5-15 随机数
@@ -82,6 +83,7 @@ class SignalPlusAniActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        animate?.removeAllListeners()
         animate?.cancel()
 
     }

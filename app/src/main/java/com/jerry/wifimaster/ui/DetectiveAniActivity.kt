@@ -96,6 +96,8 @@ class DetectiveAniActivity : BaseActivity() {
         mainHandler.removeCallbacksAndMessages(null)
         vDetectView.stop()
         deviceManager.destroy()
+        deviceList.clear()
+        vNumTip.text="扫描中,同WIFI下有0台设备"
     }
     override fun onDestroy() {
         super.onDestroy()
