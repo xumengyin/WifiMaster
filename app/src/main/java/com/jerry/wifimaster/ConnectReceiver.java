@@ -9,6 +9,10 @@ import android.net.ConnectivityManager;
 import com.blankj.utilcode.util.NetworkUtils;
 import com.jerry.baselib.utils.LogUtils;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.qualifiers.ActivityContext;
+
 public class ConnectReceiver extends BroadcastReceiver {
     Context context;
     IConnectRec callBack;
@@ -33,8 +37,8 @@ public class ConnectReceiver extends BroadcastReceiver {
 
         }
     }
-
-    public ConnectReceiver(Context context) {
+    @Inject
+    public ConnectReceiver(@ActivityContext Context context) {
         this.context = context;
     }
 

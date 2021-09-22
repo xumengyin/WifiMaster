@@ -11,15 +11,18 @@ import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import com.qmuiteam.qmui.widget.tab.QMUIBasicTabSegment
 import com.qmuiteam.qmui.widget.tab.QMUITabSegment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 open class MainActivity : BaseActivity() {
-    val wifiFragment by lazy {
-        WifiFragment()
-    }
-    val settingFragment by lazy {
-        SettingFragment()
-    }
+
+    @Inject
+    lateinit var wifiFragment:WifiFragment
+
+    @Inject
+    lateinit var settingFragment:SettingFragment
     lateinit var tabAdapter: FragmentTabAdapter
     override fun loadData(savedInstanceState: Bundle?) {
 

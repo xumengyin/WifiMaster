@@ -8,9 +8,12 @@ import com.jerry.wifimaster.Constants
 import com.jerry.wifimaster.MainApplication
 import com.jerry.wifimaster.R
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.f_setting.*
+import javax.inject.Inject
 
-class SettingFragment : BaseNativeAdFragment() {
+@AndroidEntryPoint
+open class SettingFragment @Inject constructor(): BaseNativeAdFragment() {
     override fun onCloseAds() {
         getAdsContentView().visibility = View.GONE
     }
@@ -21,7 +24,6 @@ class SettingFragment : BaseNativeAdFragment() {
         }
         return vAdContentView
     }
-
     override fun initViews() {
         super.initViews()
         val statusHeight = QMUIDisplayHelper.getStatusBarHeight(activity)

@@ -22,10 +22,13 @@ import com.yanzhenjie.nohttp.InitializationConfig;
 import com.yanzhenjie.nohttp.Logger;
 import com.yanzhenjie.nohttp.NoHttp;
 
+import dagger.hilt.android.HiltAndroidApp;
+
 
 /**
  *
  */
+@HiltAndroidApp
 public class MainApplication extends Application {
     private static MainApplication mInstance;
 

@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
 
 def buildTime() {
     def date = new Date()
@@ -9,7 +11,7 @@ def buildTime() {
 }
 android {
     compileSdkVersion 30
-    buildToolsVersion "29.0.3"
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.jerry.wifimaster"
@@ -24,7 +26,8 @@ android {
             abiFilters 'armeabi-v7a'
         }
     }
-
+        //避免编译不能用于在编译类路径中发现的注解处理器，因为它们中的任何更改都需要运行注解处理任务
+    kapt.includeCompileClasspath = false
     buildTypes {
         release {
             minifyEnabled false
@@ -95,6 +98,10 @@ dependencies {
     implementation 'com.thanosfisherman.elvis:elvis:3.0'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
+
+    implementation "com.google.dagger:hilt-android:2.38.1"
+    kapt "com.google.dagger:hilt-android-compiler:2.38.1"
+
    // implementation files('../libs/oaid_sdk_1.0.25.aar')
 
 

@@ -38,19 +38,20 @@ import com.jerry.wifimaster.wifiutils.wifiConnect.ConnectionSuccessListener
 import com.jerry.wifimaster.wifiutils.wifiRemove.RemoveErrorCode
 import com.jerry.wifimaster.wifiutils.wifiRemove.RemoveSuccessListener
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.wifi_fragment.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
+import javax.inject.Inject
 
-class WifiFragment : BaseNativeAdFragment() {
+@AndroidEntryPoint
+open class WifiFragment @Inject constructor(): BaseNativeAdFragment() {
 
     lateinit var menuAdapter: MenuAdapter
     lateinit var wifisAdapter: WifisAdapter
-
-    val connectReceiver by lazy {
-        ConnectReceiver(this@WifiFragment.context)
-    }
+    @Inject
+    lateinit var connectReceiver :ConnectReceiver
     val netSpeedHelper = NetSpeedHelper({
         //当前网速
         menuAdapter.data[0].descValue = it
